@@ -27,8 +27,8 @@ const TabButton: React.FC<TabButtonProps> = ({ active, onClick, children, isDark
       : 'bg-[#06B6D4] text-white shadow';
 
     const inactiveClasses = isDark
-      ? 'text-gray-400 hover:text-cyan-400'
-      : 'text-gray-500 hover:text-cyan-600';
+      ? 'bg-transparent text-gray-400 hover:bg-[#334155] hover:text-cyan-400'
+      : 'bg-transparent text-gray-500 hover:bg-gray-200 hover:text-cyan-600';
 
     return (
         <button

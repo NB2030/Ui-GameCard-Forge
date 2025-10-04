@@ -77,11 +77,13 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     <div className="flex flex-col h-full">
       <div className="flex-shrink-0 px-6 py-4">
         {/* Tab Navigation */}
-        <nav className="flex justify-evenly" aria-label="Tabs">
-            <TabButton active={activeTab === 'content'} onClick={() => setActiveTab('content')} isDark={isDark}>Content</TabButton>
-            <TabButton active={activeTab === 'card'} onClick={() => setActiveTab('card')} isDark={isDark}>Card Style</TabButton>
-            <TabButton active={activeTab === 'button'} onClick={() => setActiveTab('button')} isDark={isDark}>Button Style</TabButton>
-        </nav>
+        <div className={`rounded-lg p-1 ${isDark ? 'bg-[#1e293b]' : 'bg-gray-100'}`}>
+            <nav className="flex justify-evenly" aria-label="Tabs">
+                <TabButton active={activeTab === 'content'} onClick={() => setActiveTab('content')} isDark={isDark}>Content</TabButton>
+                <TabButton active={activeTab === 'card'} onClick={() => setActiveTab('card')} isDark={isDark}>Card Style</TabButton>
+                <TabButton active={activeTab === 'button'} onClick={() => setActiveTab('button')} isDark={isDark}>Button Style</TabButton>
+            </nav>
+        </div>
       </div>
 
       {/* Tab Content - Scrollable */}
