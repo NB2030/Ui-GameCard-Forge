@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GameCard Forge (Beta)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@400;600&family=Lato:wght@400;600&family=Montserrat:wght@400;600&family=Nunito:wght@400;600&family=Poppins:wght@400;600&family=Roboto+Slab:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "jszip": "https://esm.sh/jszip@3.10.1"
+  }
+}
+</script>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+  }
+
+  /* Custom Range Slider Styles for Cross-Browser Compatibility */
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  /* Webkit (Chrome, Safari) */
+  input[type=range]::-webkit-slider-runnable-track {
+    height: 0.5rem;
+    border-radius: 0.5rem;
+  }
+  .light-theme input[type=range]::-webkit-slider-runnable-track {
+    background-color: #d1d5db;
+  }
+  .dark-theme input[type=range]::-webkit-slider-runnable-track {
+    background-color: #374151;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -0.25rem;
+    height: 1rem;
+    width: 1rem;
+    border-radius: 9999px;
+  }
+  .light-theme input[type=range]::-webkit-slider-thumb {
+    background-color: #4f46e5;
+  }
+  .dark-theme input[type=range]::-webkit-slider-thumb {
+    background-color: #06b6d4;
+  }
+
+  /* Firefox */
+  input[type=range]::-moz-range-track {
+    height: 0.5rem;
+    border-radius: 0.5rem;
+  }
+  .light-theme input[type=range]::-moz-range-track {
+    background-color: #d1d5db;
+  }
+  .dark-theme input[type=range]::-moz-range-track {
+    background-color: #374151;
+  }
+
+  input[type=range]::-moz-range-thumb {
+    height: 1rem;
+    width: 1rem;
+    border-radius: 9999px;
+    border: none;
+  }
+  .light-theme input[type=range]::-moz-range-thumb {
+    background-color: #4f46e5;
+  }
+  .dark-theme input[type=range]::-moz-range-thumb {
+    background-color: #06b6d4;
+  }
+</style>
+</head>
+  <body class="bg-gray-100">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
