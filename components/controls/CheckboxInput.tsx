@@ -38,7 +38,7 @@ const CheckboxInput: React.FC<CheckboxInputProps> = ({ label, id, checked, onCha
       className={`h-4 w-4 rounded transition-colors ${
         isDark
           ? 'text-cyan-400 focus:ring-cyan-500 border-[#475569] bg-[#334155] focus:ring-offset-[#1e293b]'
-          : 'text-indigo-600 focus:ring-indigo-500 border-gray-300'
+          : 'text-cyan-600 focus:ring-cyan-500 border-gray-300'
       }`}
     />
     <label htmlFor={id} className={`ml-2 block text-sm ${

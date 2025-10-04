@@ -89,7 +89,7 @@ const FileInput: React.FC<FileInputProps> = ({
           className={`px-4 py-2 text-sm font-semibold rounded-md border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
             isDark
               ? 'bg-cyan-900/50 text-cyan-400 border-cyan-500/30 hover:bg-cyan-900/80 focus:ring-cyan-500 focus:ring-offset-[#1a232e]'
-              : 'bg-indigo-50 text-indigo-600 border-indigo-200 hover:bg-indigo-100 focus:ring-indigo-500'
+              : 'bg-cyan-50 text-cyan-600 border-cyan-200 hover:bg-cyan-100 focus:ring-cyan-500'
           }`}
         >
           {buttonText}

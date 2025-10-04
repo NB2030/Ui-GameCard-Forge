@@ -79,8 +79,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         <h2 className={`text-lg font-semibold pb-4 border-b ${isDark ? 'text-gray-200 border-[#2d3748]' : 'text-gray-800 border-gray-200'}`}>Customize Card</h2>
 
         {/* Tab Navigation */}
-        <div className={`border-b ${isDark ? 'border-[#2d3748]' : 'border-gray-200'} mt-4`}>
-          <nav className="-mb-px flex space-x-6" aria-label="Tabs">
+        <div className="mt-4">
+          <nav className="flex space-x-2" aria-label="Tabs">
               <TabButton active={activeTab === 'content'} onClick={() => setActiveTab('content')} isDark={isDark}>Content</TabButton>
               <TabButton active={activeTab === 'card'} onClick={() => setActiveTab('card')} isDark={isDark}>Card Style</TabButton>
               <TabButton active={activeTab === 'button'} onClick={() => setActiveTab('button')} isDark={isDark}>Button Style</TabButton>
