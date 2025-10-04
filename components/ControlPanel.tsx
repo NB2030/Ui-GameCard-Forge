@@ -75,15 +75,13 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-shrink-0 p-6 pb-0">
+      <div className="flex-shrink-0 px-6 py-4">
         {/* Tab Navigation */}
-        <div className="mt-4">
-          <nav className="flex justify-between" aria-label="Tabs">
-              <TabButton active={activeTab === 'content'} onClick={() => setActiveTab('content')} isDark={isDark}>Content</TabButton>
-              <TabButton active={activeTab === 'card'} onClick={() => setActiveTab('card')} isDark={isDark}>Card Style</TabButton>
-              <TabButton active={activeTab === 'button'} onClick={() => setActiveTab('button')} isDark={isDark}>Button Style</TabButton>
-          </nav>
-        </div>
+        <nav className="flex justify-between" aria-label="Tabs">
+            <TabButton active={activeTab === 'content'} onClick={() => setActiveTab('content')} isDark={isDark}>Content</TabButton>
+            <TabButton active={activeTab === 'card'} onClick={() => setActiveTab('card')} isDark={isDark}>Card Style</TabButton>
+            <TabButton active={activeTab === 'button'} onClick={() => setActiveTab('button')} isDark={isDark}>Button Style</TabButton>
+        </nav>
       </div>
 
       {/* Tab Content - Scrollable */}
