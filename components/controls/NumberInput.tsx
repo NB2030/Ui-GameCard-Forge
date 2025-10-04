@@ -53,7 +53,7 @@ const NumberInput: React.FC<NumberInputProps> = ({ label, id, value, onChange, m
       className={`w-full px-3 py-2 border rounded-md shadow-sm transition disabled:cursor-not-allowed ${
         isDark
           ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400'
-          : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500'
+          : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-cyan-500 focus:border-cyan-500'
       }`}
     />
   </div>

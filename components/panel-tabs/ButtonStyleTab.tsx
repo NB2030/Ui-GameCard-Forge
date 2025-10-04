@@ -58,7 +58,7 @@ const ButtonStyleTab: React.FC<ButtonStyleTabProps> = ({ config, handleChange, a
                         name="buttonFontFamily"
                         value={config.buttonFontFamily}
                         onChange={handleChange}
-                        className={`flex-grow px-3 py-2 border rounded-md shadow-sm transition ${isDark ? 'bg-gray-700 border-gray-600 text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500'}`}
+                        className={`flex-grow px-3 py-2 border rounded-md shadow-sm transition ${isDark ? 'bg-gray-700 border-gray-600 text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-cyan-500 focus:border-cyan-500'}`}
                     >
                         {allFonts.map(font => (
                         <option key={font.value} value={font.value}>

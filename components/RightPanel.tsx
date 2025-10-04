@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import type { CardConfig, Layout, CustomFont, LayoutId } from '../types';
 import TemplatesLibraryTab from './panel-tabs/TemplatesLibraryTab';
 import ImageAndFontsTab from './panel-tabs/ImageAndFontsTab';
+import TabButton from './controls/TabButton';
 
 /**
  * @interface RightPanelProps
@@ -52,30 +53,22 @@ const RightPanel: React.FC<RightPanelProps> = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className={`flex-shrink-0 border-b px-6 py-4 ${
-        isDark ? 'border-[#2d3748] bg-[#1a232e]' : 'border-gray-200 bg-white'
-      }`}>
-        <nav className="flex space-x-1" aria-label="Tabs">
-          <button
+      <div className="flex-shrink-0 px-6 py-4">
+        <nav className="flex space-x-2" aria-label="Tabs">
+          <TabButton
+            active={activeTab === 'templates'}
             onClick={() => setActiveTab('templates')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-              activeTab === 'templates'
-                ? isDark ? 'bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/30' : 'bg-blue-100 text-blue-700 border border-blue-200'
-                : isDark ? 'text-gray-400 hover:text-[#22d3ee] hover:bg-[#1e2837]' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-            }`}
+            isDark={isDark}
           >
             Templates & Presets
-          </button>
-          <button
+          </TabButton>
+          <TabButton
+            active={activeTab === 'assets'}
             onClick={() => setActiveTab('assets')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-              activeTab === 'assets'
-                ? isDark ? 'bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/30' : 'bg-blue-100 text-blue-700 border border-blue-200'
-                : isDark ? 'text-gray-400 hover:text-[#22d3ee] hover:bg-[#1e2837]' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-            }`}
+            isDark={isDark}
           >
             Image & Fonts
-          </button>
+          </TabButton>
         </nav>
       </div>
 

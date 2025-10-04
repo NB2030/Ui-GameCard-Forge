@@ -93,7 +93,7 @@ const HeaderToolbar: React.FC<HeaderToolbarProps> = ({
       <div className="flex items-center gap-3">
         <div>
             <label htmlFor="config-import" className={`flex items-center justify-center px-4 py-2 font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 border transition-all duration-200 ease-in-out cursor-pointer text-sm ${
-              isDark ? 'bg-[#334155] text-cyan-400 hover:bg-[#475569] border-[#475569] focus:ring-cyan-500 focus:ring-offset-[#1e293b]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300 focus:ring-blue-500'
+              isDark ? 'bg-[#334155] text-cyan-400 hover:bg-[#475569] border-[#475569] focus:ring-cyan-500 focus:ring-offset-[#1e293b]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300 focus:ring-cyan-500'
             }`}>
                 <ImportIcon />
                 Import Theme
@@ -112,7 +112,7 @@ const HeaderToolbar: React.FC<HeaderToolbarProps> = ({
             type="button"
             onClick={onConfigExport}
             className={`flex items-center justify-center px-4 py-2 font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 border transition-all duration-200 ease-in-out text-sm ${
-              isDark ? 'bg-[#334155] text-cyan-400 hover:bg-[#475569] border-[#475569] focus:ring-cyan-500 focus:ring-offset-[#1e293b]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300 focus:ring-blue-500'
+              isDark ? 'bg-[#334155] text-cyan-400 hover:bg-[#475569] border-[#475569] focus:ring-cyan-500 focus:ring-offset-[#1e293b]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300 focus:ring-cyan-500'
             }`}
         >
             <ExportIcon />
@@ -125,7 +125,7 @@ const HeaderToolbar: React.FC<HeaderToolbarProps> = ({
           type="button"
           onClick={onOpenSettings}
           className={`flex items-center justify-center p-2.5 font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 border transition-all duration-200 ease-in-out ${
-            isDark ? 'bg-[#334155] text-cyan-400 hover:bg-[#475569] border-[#475569] focus:ring-cyan-500 focus:ring-offset-[#1e293b]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300 focus:ring-blue-500'
+            isDark ? 'bg-[#334155] text-cyan-400 hover:bg-[#475569] border-[#475569] focus:ring-cyan-500 focus:ring-offset-[#1e293b]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300 focus:ring-cyan-500'
           }`}
           aria-label="Settings"
         >

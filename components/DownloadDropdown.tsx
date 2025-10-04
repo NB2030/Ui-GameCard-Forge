@@ -204,7 +204,7 @@ const DownloadDropdown: React.FC<DownloadDropdownProps> = ({
             className={`flex items-center justify-center px-4 py-2 font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 ease-in-out text-sm ${
               isDark
                 ? 'bg-cyan-600 text-white hover:bg-cyan-700 focus:ring-cyan-500 focus:ring-offset-[#1a232e]'
-                : 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
+                : 'bg-cyan-500 text-white hover:bg-cyan-600 focus:ring-cyan-500'
             }`}
             id="options-menu"
             aria-haspopup="true"

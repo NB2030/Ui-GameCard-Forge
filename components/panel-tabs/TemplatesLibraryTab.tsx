@@ -107,8 +107,8 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme, isActive, onClick, i
       onClick={onClick}
       className={`relative cursor-pointer rounded-lg border-2 transition-all duration-200 group ${
         isActive
-          ? isDark ? 'border-cyan-500 bg-[#334155] shadow-lg' : 'border-blue-500 bg-blue-50 shadow-md'
-          : isDark ? 'border-[#475569] bg-[#1e293b] hover:border-cyan-500' : 'border-gray-200 bg-white hover:border-gray-300'
+          ? isDark ? 'border-cyan-500 bg-[#334155] shadow-lg' : 'border-cyan-500 bg-cyan-50 shadow-md'
+          : isDark ? 'border-[#475569] bg-[#1e293b] hover:border-cyan-500' : 'border-gray-200 bg-white hover:border-cyan-400'
       }`}
     >
       {/* Preview Image */}
@@ -136,7 +136,7 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme, isActive, onClick, i
 
       {/* Active Indicator */}
       {isActive && (
-        <div className={`absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center ${isDark ? 'bg-cyan-500' : 'bg-blue-500'}`}>
+        <div className={`absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center ${isDark ? 'bg-cyan-500' : 'bg-cyan-500'}`}>
           <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
           </svg>
@@ -183,8 +183,8 @@ const TemplatesLibraryTab: React.FC<TemplatesLibraryTabProps> = ({
                 onClick={() => onLayoutChange(layout.id)}
                 className={`p-4 text-center rounded-xl border-2 transition-all duration-200 transform hover:scale-105 hover:shadow-lg active:scale-95 ${
                   activeLayoutId === layout.id
-                    ? isDark ? 'border-cyan-500 bg-cyan-500/10 text-cyan-400 shadow-md' : 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 shadow-md'
-                    : isDark ? 'border-[#475569] bg-[#1e293b] hover:border-cyan-500 text-gray-300' : 'border-gray-300 bg-gradient-to-br from-white to-gray-50 hover:border-blue-400 hover:bg-gradient-to-br hover:from-blue-50 hover:to-white text-gray-700 shadow-sm hover:shadow-md'
+                    ? isDark ? 'border-cyan-500 bg-cyan-500/10 text-cyan-400 shadow-md' : 'border-cyan-500 bg-gradient-to-br from-cyan-50 to-cyan-100 text-cyan-700 shadow-md'
+                    : isDark ? 'border-[#475569] bg-[#1e293b] hover:border-cyan-500 text-gray-300' : 'border-gray-300 bg-gradient-to-br from-white to-gray-50 hover:border-cyan-400 hover:bg-gradient-to-br hover:from-cyan-50 hover:to-white text-gray-700 shadow-sm hover:shadow-md'
                 }`}
               >
                 <div className={`flex items-center justify-center mb-2 ${activeLayoutId === layout.id ? '' : isDark ? 'text-gray-400' : ''}`}>
@@ -210,13 +210,13 @@ const TemplatesLibraryTab: React.FC<TemplatesLibraryTabProps> = ({
               onClick={() => onLayoutChange(layout.id)}
               className={`w-full p-3 text-left rounded-xl border-2 transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] ${
                 activeLayoutId === layout.id
-                  ? isDark ? 'border-cyan-500 bg-cyan-500/10 text-cyan-400 shadow-md' : 'border-purple-500 bg-gradient-to-r from-purple-50 to-indigo-50 text-purple-700 shadow-md'
-                  : isDark ? 'border-[#475569] bg-[#1e293b] hover:border-cyan-500 text-gray-300' : 'border-gray-300 bg-gradient-to-r from-white to-gray-50 hover:border-purple-400 hover:bg-gradient-to-r hover:from-purple-50 hover:to-white text-gray-700 shadow-sm hover:shadow-md'
+                  ? isDark ? 'border-cyan-500 bg-cyan-500/10 text-cyan-400 shadow-md' : 'border-cyan-500 bg-gradient-to-r from-cyan-50 to-cyan-100 text-cyan-700 shadow-md'
+                  : isDark ? 'border-[#475569] bg-[#1e293b] hover:border-cyan-500 text-gray-300' : 'border-gray-300 bg-gradient-to-r from-white to-gray-50 hover:border-cyan-400 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-white text-gray-700 shadow-sm hover:shadow-md'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <div className={`p-1.5 rounded-lg ${activeLayoutId === layout.id ? (isDark ? 'bg-cyan-500/20' : 'bg-purple-100') : (isDark ? 'bg-[#334155]' : 'bg-gray-100')}`}>
+                  <div className={`p-1.5 rounded-lg ${activeLayoutId === layout.id ? (isDark ? 'bg-cyan-500/20' : 'bg-cyan-100') : (isDark ? 'bg-[#334155]' : 'bg-gray-100')}`}>
                     <svg className={`w-4 h-4 ${activeLayoutId !== layout.id && isDark ? 'text-gray-400' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>

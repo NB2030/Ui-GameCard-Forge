@@ -50,7 +50,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           <button
             onClick={onClose}
             className={`text-2xl leading-none ${
-              isDark ? 'text-gray-500 hover:text-cyan-400' : 'text-gray-400 hover:text-gray-600'
+              isDark ? 'text-gray-500 hover:text-cyan-400' : 'text-gray-400 hover:text-cyan-600'
             }`}
           >
             &times;
@@ -133,7 +133,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 value={settings.canvasBackgroundColor}
                 onChange={(e) => onSettingsChange({ canvasBackgroundColor: e.target.value })}
                 className={`flex-1 px-3 py-2 border rounded-lg text-sm ${
-                  isDark ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-white border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500'
+                  isDark ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-white border-gray-300 text-gray-900 focus:ring-cyan-500 focus:border-cyan-500'
                 }`}
                 placeholder="#f3f4f6"
               />
@@ -179,7 +179,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           <button
             onClick={onClose}
             className={`flex-1 px-4 py-2 font-medium rounded-lg transition-colors ${
-              isDark ? 'bg-cyan-600 text-white hover:bg-cyan-700' : 'bg-blue-600 text-white hover:bg-blue-700'
+              isDark ? 'bg-cyan-600 text-white hover:bg-cyan-700' : 'bg-cyan-500 text-white hover:bg-cyan-600'
             }`}
           >
             Close
