@@ -77,7 +77,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     <div className="flex flex-col h-full">
       <div className="flex-shrink-0 px-6 py-4">
         {/* Tab Navigation */}
-        <nav className="flex justify-between" aria-label="Tabs">
+        <nav className="flex justify-evenly" aria-label="Tabs">
             <TabButton active={activeTab === 'content'} onClick={() => setActiveTab('content')} isDark={isDark}>Content</TabButton>
             <TabButton active={activeTab === 'card'} onClick={() => setActiveTab('card')} isDark={isDark}>Card Style</TabButton>
             <TabButton active={activeTab === 'button'} onClick={() => setActiveTab('button')} isDark={isDark}>Button Style</TabButton>
