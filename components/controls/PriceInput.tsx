@@ -110,7 +110,7 @@ const PriceInput: React.FC<PriceInputProps> = ({
         <label htmlFor="custom-icon-upload" className={`cursor-pointer text-xs font-semibold px-3 py-2 rounded-md transition-colors border ${
           isDark
             ? 'bg-cyan-900/50 text-cyan-400 border-cyan-500/30 hover:bg-cyan-900/80'
-            : 'text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border-indigo-200'
+            : 'text-cyan-600 bg-cyan-50 hover:bg-cyan-100 border-cyan-200'
         }`}>
             Upload Icon
         </label>
@@ -128,7 +128,7 @@ const PriceInput: React.FC<PriceInputProps> = ({
       name={currencyId}
       value={currencyValue}
       onChange={onChange}
-      className={`px-3 py-1 border rounded-md shadow-sm transition ${isDark ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500'}`}
+      className={`px-3 py-1 border rounded-md shadow-sm transition ${isDark ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-cyan-500 focus:border-cyan-500'}`}
       aria-label="Currency Symbol"
     >
       {currencySymbols.map(symbol => (
@@ -154,7 +154,7 @@ const PriceInput: React.FC<PriceInputProps> = ({
           value={priceValue}
           onChange={onChange}
           lang="en"
-          className={`flex-grow w-full px-3 py-1 border rounded-md shadow-sm transition ${isDark ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500'}`}
+          className={`flex-grow w-full px-3 py-1 border rounded-md shadow-sm transition ${isDark ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-cyan-500 focus:border-cyan-500'}`}
           placeholder="4.99"
           step="0.01"
         />
@@ -167,7 +167,7 @@ const PriceInput: React.FC<PriceInputProps> = ({
                 type="checkbox"
                 checked={useIconValue}
                 onChange={onChange}
-                className={`h-4 w-4 rounded ${isDark ? 'text-cyan-400 focus:ring-cyan-500 border-[#475569] bg-[#334155]' : 'text-indigo-600 focus:ring-indigo-500 border-gray-300'}`}
+                className={`h-4 w-4 rounded ${isDark ? 'text-cyan-400 focus:ring-cyan-500 border-[#475569] bg-[#334155]' : 'text-cyan-600 focus:ring-cyan-500 border-gray-300'}`}
             />
             <label htmlFor={useIconId} className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                 Icon
@@ -181,7 +181,7 @@ const PriceInput: React.FC<PriceInputProps> = ({
                 <label className={`block text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Symbol Position</label>
                 <div className="flex items-center gap-1 max-w-[150px]">
                     <span className={`font-mono text-xs mr-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>X:</span>
-                    <button type="button" onClick={() => handleValueChange(priceCurrencySymbolOffsetXId, priceCurrencySymbolOffsetXValue - 1)} className={`p-1.5 rounded-md transition focus:outline-none focus:ring-2 ${isDark ? 'bg-[#475569] text-gray-300 hover:bg-[#5a6b82] focus:ring-cyan-500' : 'bg-gray-200 hover:bg-gray-300 focus:ring-indigo-500'}`}>
+                    <button type="button" onClick={() => handleValueChange(priceCurrencySymbolOffsetXId, priceCurrencySymbolOffsetXValue - 1)} className={`p-1.5 rounded-md transition focus:outline-none focus:ring-2 ${isDark ? 'bg-[#475569] text-gray-300 hover:bg-[#5a6b82] focus:ring-cyan-500' : 'bg-gray-200 hover:bg-gray-300 focus:ring-cyan-500'}`}>
                         <ArrowLeftIcon />
                     </button>
                     <input
@@ -191,9 +191,9 @@ const PriceInput: React.FC<PriceInputProps> = ({
                         value={priceCurrencySymbolOffsetXValue}
                         onChange={onChange}
                         lang="en"
-                        className={`w-full text-center px-1 py-1 border rounded-md shadow-sm transition ${isDark ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500'}`}
+                        className={`w-full text-center px-1 py-1 border rounded-md shadow-sm transition ${isDark ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-cyan-500 focus:border-cyan-500'}`}
                     />
-                    <button type="button" onClick={() => handleValueChange(priceCurrencySymbolOffsetXId, priceCurrencySymbolOffsetXValue + 1)} className={`p-1.5 rounded-md transition focus:outline-none focus:ring-2 ${isDark ? 'bg-[#475569] text-gray-300 hover:bg-[#5a6b82] focus:ring-cyan-500' : 'bg-gray-200 hover:bg-gray-300 focus:ring-indigo-500'}`}>
+                    <button type="button" onClick={() => handleValueChange(priceCurrencySymbolOffsetXId, priceCurrencySymbolOffsetXValue + 1)} className={`p-1.5 rounded-md transition focus:outline-none focus:ring-2 ${isDark ? 'bg-[#475569] text-gray-300 hover:bg-[#5a6b82] focus:ring-cyan-500' : 'bg-gray-200 hover:bg-gray-300 focus:ring-cyan-500'}`}>
                         <ArrowRightIcon />
                     </button>
                 </div>

@@ -309,7 +309,7 @@ const App: React.FC = () => {
   return (
     <div
       className={`h-screen w-full flex flex-col font-sans overflow-hidden ${
-        isDark ? 'bg-[#0f172a]' : 'bg-gray-50'
+        isDark ? 'bg-[#0f172a]' : 'bg-[#F9FAFB]'
       }`}
       style={{
         transform: `scale(${settings.uiScale})`,
@@ -344,7 +344,7 @@ const App: React.FC = () => {
       <div className="flex-1 flex overflow-hidden">
         
         <div className={`w-80 flex flex-col ${
-          isDark ? 'bg-[#1a232e] border-r border-[#2d3748]' : 'bg-white border-r border-gray-200'
+          isDark ? 'bg-[#1a232e] border-r border-[#2d3748]' : 'bg-[#F9FAFB] border-r border-gray-200'
         }`} style={{ fontSize: `${settings.uiFontSize}px` }}>
           <ControlPanel
             config={config}
@@ -380,7 +380,7 @@ const App: React.FC = () => {
         </div>
 
         <div className={`w-80 flex flex-col ${
-          isDark ? 'bg-[#1a232e] border-l border-[#2d3748]' : 'bg-white border-l border-gray-200'
+          isDark ? 'bg-[#1a232e] border-l border-[#2d3748]' : 'bg-[#F9FAFB] border-l border-gray-200'
         }`} style={{ fontSize: `${settings.uiFontSize}px` }}>
           <RightPanel
             layouts={allLayouts}

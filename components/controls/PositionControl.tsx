@@ -76,7 +76,7 @@ const PositionControl: React.FC<PositionControlProps> = ({ label, idX, idY, valu
         {/* X-axis controls */}
         <div className="flex items-center gap-1">
           <span className={`font-mono text-xs mr-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>X:</span>
-          <button type="button" onClick={() => handleValueChange(idX, valueX - 1)} className={`p-1.5 rounded-md transition focus:outline-none focus:ring-2 ${isDark ? 'bg-[#475569] text-gray-300 hover:bg-[#5a6b82] focus:ring-cyan-500' : 'bg-gray-200 hover:bg-gray-300 focus:ring-indigo-500'}`}>
+          <button type="button" onClick={() => handleValueChange(idX, valueX - 1)} className={`p-1.5 rounded-md transition focus:outline-none focus:ring-2 ${isDark ? 'bg-[#475569] text-gray-300 hover:bg-[#5a6b82] focus:ring-cyan-500' : 'bg-gray-200 hover:bg-gray-300 focus:ring-cyan-500'}`}>
             <ArrowLeftIcon />
           </button>
           <input
@@ -84,9 +84,9 @@ const PositionControl: React.FC<PositionControlProps> = ({ label, idX, idY, valu
             value={valueX}
             onChange={(e) => handleValueChange(idX, parseInt(e.target.value, 10) || 0)}
             lang="en"
-            className={`w-full text-center px-1 py-1 border rounded-md shadow-sm transition ${isDark ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500'}`}
+            className={`w-full text-center px-1 py-1 border rounded-md shadow-sm transition ${isDark ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-cyan-500 focus:border-cyan-500'}`}
           />
-          <button type="button" onClick={() => handleValueChange(idX, valueX + 1)} className={`p-1.5 rounded-md transition focus:outline-none focus:ring-2 ${isDark ? 'bg-[#475569] text-gray-300 hover:bg-[#5a6b82] focus:ring-cyan-500' : 'bg-gray-200 hover:bg-gray-300 focus:ring-indigo-500'}`}>
+          <button type="button" onClick={() => handleValueChange(idX, valueX + 1)} className={`p-1.5 rounded-md transition focus:outline-none focus:ring-2 ${isDark ? 'bg-[#475569] text-gray-300 hover:bg-[#5a6b82] focus:ring-cyan-500' : 'bg-gray-200 hover:bg-gray-300 focus:ring-cyan-500'}`}>
             <ArrowRightIcon />
           </button>
         </div>
@@ -94,7 +94,7 @@ const PositionControl: React.FC<PositionControlProps> = ({ label, idX, idY, valu
         {/* Y-axis controls */}
         <div className="flex items-center gap-1">
           <span className={`font-mono text-xs mr-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Y:</span>
-           <button type="button" onClick={() => handleValueChange(idY, valueY - 1)} className={`p-1.5 rounded-md transition focus:outline-none focus:ring-2 ${isDark ? 'bg-[#475569] text-gray-300 hover:bg-[#5a6b82] focus:ring-cyan-500' : 'bg-gray-200 hover:bg-gray-300 focus:ring-indigo-500'}`}>
+           <button type="button" onClick={() => handleValueChange(idY, valueY - 1)} className={`p-1.5 rounded-md transition focus:outline-none focus:ring-2 ${isDark ? 'bg-[#475569] text-gray-300 hover:bg-[#5a6b82] focus:ring-cyan-500' : 'bg-gray-200 hover:bg-gray-300 focus:ring-cyan-500'}`}>
             <ArrowUpIcon />
           </button>
           <input
@@ -102,9 +102,9 @@ const PositionControl: React.FC<PositionControlProps> = ({ label, idX, idY, valu
             value={valueY}
             onChange={(e) => handleValueChange(idY, parseInt(e.target.value, 10) || 0)}
             lang="en"
-            className={`w-full text-center px-1 py-1 border rounded-md shadow-sm transition ${isDark ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500'}`}
+            className={`w-full text-center px-1 py-1 border rounded-md shadow-sm transition ${isDark ? 'bg-[#334155] border-[#475569] text-white focus:ring-cyan-500 focus:border-cyan-400' : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-cyan-500 focus:border-cyan-500'}`}
           />
-          <button type="button" onClick={() => handleValueChange(idY, valueY + 1)} className={`p-1.5 rounded-md transition focus:outline-none focus:ring-2 ${isDark ? 'bg-[#475569] text-gray-300 hover:bg-[#5a6b82] focus:ring-cyan-500' : 'bg-gray-200 hover:bg-gray-300 focus:ring-indigo-500'}`}>
+          <button type="button" onClick={() => handleValueChange(idY, valueY + 1)} className={`p-1.5 rounded-md transition focus:outline-none focus:ring-2 ${isDark ? 'bg-[#475569] text-gray-300 hover:bg-[#5a6b82] focus:ring-cyan-500' : 'bg-gray-200 hover:bg-gray-300 focus:ring-cyan-500'}`}>
             <ArrowDownIcon />
           </button>
         </div>

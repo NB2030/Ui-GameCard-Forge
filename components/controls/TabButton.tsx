@@ -12,7 +12,7 @@ interface TabButtonProps {
 }
 
 /**
- * @description A button component designed for tab-style navigation, featuring distinct visual states for active and inactive tabs.
+ * @description A button component designed for tab-style navigation, featuring distinct visual states for active and inactive tabs. This version uses a solid-filled style for the active tab.
  * @param {TabButtonProps} props The props for the component.
  * @param {boolean} props.active Indicates whether the tab is currently active, which determines its styling.
  * @param {() => void} props.onClick The callback function to be executed when the button is clicked.
@@ -21,16 +21,21 @@ interface TabButtonProps {
  * @returns {React.ReactElement} The rendered tab button element.
  */
 const TabButton: React.FC<TabButtonProps> = ({ active, onClick, children, isDark = false }) => {
+    // UPDATED: New classes for a solid, filled button style per user request.
     const activeClasses = isDark
-      ? 'border-cyan-400 text-cyan-400'
-      : 'border-indigo-500 text-indigo-600';
+      ? 'bg-cyan-500 text-white'
+      : 'bg-[#06B6D4] text-white shadow';
+
     const inactiveClasses = isDark
-      ? 'border-transparent text-gray-400 hover:text-cyan-400 hover:border-[#334155]'
-      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
+      ? 'text-gray-400 hover:text-cyan-400'
+      : 'text-gray-500 hover:text-cyan-600';
+
     return (
         <button
             onClick={onClick}
-            className={`whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm transition-colors focus:outline-none ${active ? activeClasses : inactiveClasses}`}
+            className={`whitespace-nowrap rounded-md py-2 px-3 font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 ${
+                isDark ? 'focus:ring-offset-[#1a232e]' : 'focus:ring-offset-[#F9FAFB]'
+            } ${active ? activeClasses : inactiveClasses}`}
         >
             {children}
         </button>
