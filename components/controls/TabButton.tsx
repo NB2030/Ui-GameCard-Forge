@@ -33,7 +33,7 @@ const TabButton: React.FC<TabButtonProps> = ({ active, onClick, children, isDark
     return (
         <button
             onClick={onClick}
-            className={`whitespace-nowrap rounded-md py-2 px-3.5 font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 ${
+            className={`whitespace-nowrap rounded-md py-2 px-3 font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 ${
                 isDark ? 'focus:ring-offset-[#1a232e]' : 'focus:ring-offset-[#F9FAFB]'
             } ${active ? activeClasses : inactiveClasses}`}
         >
