@@ -54,22 +54,24 @@ const RightPanel: React.FC<RightPanelProps> = ({
   return (
     <div className="flex flex-col h-full">
       <div className="flex-shrink-0 px-6 py-4">
-        <nav className="flex space-x-2" aria-label="Tabs">
-          <TabButton
-            active={activeTab === 'templates'}
-            onClick={() => setActiveTab('templates')}
-            isDark={isDark}
-          >
-            Templates & Presets
-          </TabButton>
-          <TabButton
-            active={activeTab === 'assets'}
-            onClick={() => setActiveTab('assets')}
-            isDark={isDark}
-          >
-            Image & Fonts
-          </TabButton>
-        </nav>
+        <div className={`rounded-lg p-1 ${isDark ? 'bg-[#1e293b]' : 'bg-gray-100'}`}>
+            <nav className="flex justify-evenly" aria-label="Tabs">
+              <TabButton
+                active={activeTab === 'templates'}
+                onClick={() => setActiveTab('templates')}
+                isDark={isDark}
+              >
+                Templates & Presets
+              </TabButton>
+              <TabButton
+                active={activeTab === 'assets'}
+                onClick={() => setActiveTab('assets')}
+                isDark={isDark}
+              >
+                Image & Fonts
+              </TabButton>
+            </nav>
+        </div>
       </div>
 
       {/* Tab Content */}
