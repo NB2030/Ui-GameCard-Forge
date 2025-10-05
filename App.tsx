@@ -341,7 +341,7 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden min-h-0">
         
         <div className={`w-80 flex flex-col ${
           isDark ? 'bg-[#1a232e] border-r border-[#2d3748]' : 'bg-[#F9FAFB] border-r border-gray-200'
