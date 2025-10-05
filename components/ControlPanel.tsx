@@ -74,9 +74,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   };
   
   return (
-    <div className="flex flex-col h-full">
+    <div className="h-full flex flex-col">
       <div className="flex-shrink-0 px-6 py-4">
-        {/* Tab Navigation */}
         <div className={`rounded-lg p-1 ${isDark ? 'bg-[#1e293b]' : 'bg-gray-100'}`}>
             <nav className="flex justify-evenly" aria-label="Tabs">
                 <TabButton active={activeTab === 'content'} onClick={() => setActiveTab('content')} isDark={isDark}>Content</TabButton>
@@ -86,8 +85,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         </div>
       </div>
 
-      {/* Tab Content - Scrollable */}
-      <div className="flex-1 overflow-y-auto px-6 pt-6 pb-6">
+      <div className="flex-1 overflow-y-auto px-6 pb-6" style={{ minHeight: 0 }}>
         {activeTab === 'content' && (
             <ContentTab
                 config={config}
