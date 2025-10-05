@@ -341,9 +341,9 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <div className="flex-1 flex overflow-hidden">
-        
-        <div className={`w-80 flex flex-col ${
+      <div className="flex-1 flex min-h-0">
+
+        <div className={`w-80 flex flex-col overflow-hidden ${
           isDark ? 'bg-[#1a232e] border-r border-[#2d3748]' : 'bg-[#F9FAFB] border-r border-gray-200'
         }`} style={{ fontSize: `${settings.uiFontSize}px` }}>
           <ControlPanel
@@ -362,11 +362,11 @@ const App: React.FC = () => {
         </div>
 
         <div
-          className="flex-1 flex items-center justify-center p-8"
+          className="flex-1 flex items-center justify-center p-8 overflow-hidden"
           style={{ backgroundColor: settings.canvasBackgroundColor }}
         >
-          <div 
-            ref={svgContainerRef} 
+          <div
+            ref={svgContainerRef}
             className="max-w-full max-h-full shadow-2xl rounded-lg overflow-hidden"
             style={{
               aspectRatio: `${config.cardWidth} / ${config.cardHeight}`,
@@ -379,7 +379,7 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        <div className={`w-80 flex flex-col ${
+        <div className={`w-80 flex flex-col overflow-hidden ${
           isDark ? 'bg-[#1a232e] border-l border-[#2d3748]' : 'bg-[#F9FAFB] border-l border-gray-200'
         }`} style={{ fontSize: `${settings.uiFontSize}px` }}>
           <RightPanel
