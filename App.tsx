@@ -308,17 +308,11 @@ const App: React.FC = () => {
 
   return (
     <div
-      className={`h-screen w-full flex flex-col font-sans overflow-hidden ${
+      className={`h-screen w-full flex flex-col font-sans ${
         isDark ? 'bg-[#0f172a]' : 'bg-[#F9FAFB]'
       }`}
-      style={{
-        transform: `scale(${settings.uiScale})`,
-        transformOrigin: 'top left',
-        width: `${100 / settings.uiScale}%`,
-        height: `${100 / settings.uiScale}%`
-      }}
     >
-      
+
       <HeaderToolbar
         onConfigExport={handleConfigExport}
         onConfigImport={handleConfigImport}
@@ -341,9 +335,9 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <div className="flex-1 flex min-h-0">
+      <div className="flex-1 flex overflow-hidden" style={{ minHeight: 0 }}>
 
-        <div className={`w-80 flex flex-col overflow-hidden ${
+        <div className={`w-80 flex flex-col ${
           isDark ? 'bg-[#1a232e] border-r border-[#2d3748]' : 'bg-[#F9FAFB] border-r border-gray-200'
         }`} style={{ fontSize: `${settings.uiFontSize}px` }}>
           <ControlPanel
@@ -362,7 +356,7 @@ const App: React.FC = () => {
         </div>
 
         <div
-          className="flex-1 flex items-center justify-center p-8 overflow-hidden"
+          className="flex-1 flex items-center justify-center p-8"
           style={{ backgroundColor: settings.canvasBackgroundColor }}
         >
           <div
@@ -379,7 +373,7 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        <div className={`w-80 flex flex-col overflow-hidden ${
+        <div className={`w-80 flex flex-col ${
           isDark ? 'bg-[#1a232e] border-l border-[#2d3748]' : 'bg-[#F9FAFB] border-l border-gray-200'
         }`} style={{ fontSize: `${settings.uiFontSize}px` }}>
           <RightPanel
