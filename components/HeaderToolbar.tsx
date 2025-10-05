@@ -32,6 +32,24 @@ const SettingsIcon = () => (
     </svg>
 );
 
+const UndoIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+    </svg>
+);
+
+const RedoIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 10h-10a8 8 0 00-8 8v2m18-10l-6 6m6-6l-6-6" />
+    </svg>
+);
+
+const ResetIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+    </svg>
+);
+
 /**
  * @interface HeaderToolbarProps
  * @description Props for the HeaderToolbar component.
@@ -55,6 +73,16 @@ interface HeaderToolbarProps {
   onOpenSettings: () => void;
   /** @type {boolean} Indicates if the dark theme is currently active, used for styling the toolbar. */
   isDark: boolean;
+  /** @type {() => void} Callback function to undo the last change. */
+  onUndo?: () => void;
+  /** @type {() => void} Callback function to redo the last undone change. */
+  onRedo?: () => void;
+  /** @type {() => void} Callback function to reset all card customization settings. */
+  onReset?: () => void;
+  /** @type {boolean} Indicates if undo is available. */
+  canUndo?: boolean;
+  /** @type {boolean} Indicates if redo is available. */
+  canRedo?: boolean;
 }
 
 /**
@@ -71,13 +99,18 @@ const HeaderToolbar: React.FC<HeaderToolbarProps> = ({
   buttonWithHoverSvgContainerRef,
   onError,
   onOpenSettings,
-  isDark
+  isDark,
+  onUndo,
+  onRedo,
+  onReset,
+  canUndo = false,
+  canRedo = false
 }) => {
   return (
     <div className={`h-14 flex items-center justify-between px-6 shadow-sm ${
       isDark ? 'bg-[#1e293b] border-b border-[#334155]' : 'bg-white border-b border-gray-200'
     }`}>
-      
+
       <div className="flex items-center">
         <div className={isDark ? 'text-cyan-400' : 'text-gray-800'}>
           <AppIcon />
@@ -120,7 +153,63 @@ const HeaderToolbar: React.FC<HeaderToolbarProps> = ({
         </button>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
+        {onUndo && (
+          <button
+            type="button"
+            onClick={onUndo}
+            disabled={!canUndo}
+            className={`flex items-center justify-center p-2.5 font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 border transition-all duration-200 ease-in-out ${
+              canUndo
+                ? isDark
+                  ? 'bg-[#334155] text-cyan-400 hover:bg-[#475569] border-[#475569] focus:ring-cyan-500 focus:ring-offset-[#1e293b]'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300 focus:ring-cyan-500'
+                : isDark
+                  ? 'bg-[#1e293b] text-gray-600 border-[#334155] cursor-not-allowed'
+                  : 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed'
+            }`}
+            aria-label="Undo"
+            title="Undo"
+          >
+            <UndoIcon />
+          </button>
+        )}
+
+        {onRedo && (
+          <button
+            type="button"
+            onClick={onRedo}
+            disabled={!canRedo}
+            className={`flex items-center justify-center p-2.5 font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 border transition-all duration-200 ease-in-out ${
+              canRedo
+                ? isDark
+                  ? 'bg-[#334155] text-cyan-400 hover:bg-[#475569] border-[#475569] focus:ring-cyan-500 focus:ring-offset-[#1e293b]'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300 focus:ring-cyan-500'
+                : isDark
+                  ? 'bg-[#1e293b] text-gray-600 border-[#334155] cursor-not-allowed'
+                  : 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed'
+            }`}
+            aria-label="Redo"
+            title="Redo"
+          >
+            <RedoIcon />
+          </button>
+        )}
+
+        {onReset && (
+          <button
+            type="button"
+            onClick={onReset}
+            className={`flex items-center justify-center p-2.5 font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 border transition-all duration-200 ease-in-out ${
+              isDark ? 'bg-[#334155] text-cyan-400 hover:bg-[#475569] border-[#475569] focus:ring-cyan-500 focus:ring-offset-[#1e293b]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300 focus:ring-cyan-500'
+            }`}
+            aria-label="Reset All"
+            title="Reset All Customization"
+          >
+            <ResetIcon />
+          </button>
+        )}
+
         <button
           type="button"
           onClick={onOpenSettings}

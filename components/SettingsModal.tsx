@@ -69,7 +69,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 onClick={() => onSettingsChange({ theme: 'light' })}
                 className={`flex-1 px-4 py-2 rounded-lg border font-medium transition-all ${
                   settings.theme === 'light'
-                    ? 'bg-blue-100 border-blue-300 text-blue-700'
+                    ? 'bg-[#0E95B6]/20 border-[#0E95B6]/50 text-[#0E95B6]'
                     : isDark ? 'bg-[#334155] border-[#475569] text-gray-300 hover:bg-[#475569]' : 'bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100'
                 }`}
               >
