@@ -74,7 +74,7 @@ const HeaderToolbar: React.FC<HeaderToolbarProps> = ({
   isDark
 }) => {
   return (
-    <div className={`h-14 flex items-center justify-between px-6 shadow-sm ${
+    <div className={`sticky top-0 z-50 h-14 flex items-center justify-between px-6 shadow-sm ${
       isDark ? 'bg-[#1e293b] border-b border-[#334155]' : 'bg-white border-b border-gray-200'
     }`}>
       

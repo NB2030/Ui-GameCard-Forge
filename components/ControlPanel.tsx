@@ -87,7 +87,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       </div>
 
       {/* Tab Content - Scrollable */}
-      <div className="flex-1 overflow-y-auto px-6 pt-6 pb-6">
+      <div className="flex-1 overflow-y-auto min-h-0 px-6 pt-6 pb-6">
         {activeTab === 'content' && (
             <ContentTab
                 config={config}
