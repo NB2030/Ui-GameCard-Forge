@@ -52,7 +52,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
   const [activeTab, setActiveTab] = useState<'templates' | 'assets'>('templates');
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="h-full flex flex-col">
       <div className="flex-shrink-0 px-6 py-4">
         <div className={`rounded-lg p-1 ${isDark ? 'bg-[#1e293b]' : 'bg-gray-100'}`}>
             <nav className="flex justify-evenly" aria-label="Tabs">
@@ -74,8 +74,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
         </div>
       </div>
 
-      {/* Tab Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto" style={{ minHeight: 0 }}>
         {activeTab === 'templates' && (
           <TemplatesLibraryTab
             layouts={layouts}
