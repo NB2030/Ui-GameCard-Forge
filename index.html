@@ -84,6 +84,37 @@
   .dark-theme input[type=range]::-moz-range-thumb {
     background-color: #06b6d4;
   }
+
+  /* Custom Scrollbar Styles for Dark Theme */
+  .dark-theme {
+    scrollbar-color: #4a5568 #1a232e; /* thumb and track color for Firefox */
+    scrollbar-width: thin; /* can be 'auto', 'thin', or 'none' for Firefox */
+  }
+
+  /* Webkit (Chrome, Safari) */
+  .dark-theme ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .dark-theme ::-webkit-scrollbar-track {
+    background: #1a232e;
+    border-radius: 4px;
+  }
+
+  .dark-theme ::-webkit-scrollbar-thumb {
+    background: #4a5568;
+    border-radius: 4px;
+  }
+
+  .dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+  }
+
+  /* Style for number input up/down arrows in Webkit browsers for dark theme */
+  .dark-theme input[type=number]::-webkit-inner-spin-button,
+  .dark-theme input[type=number]::-webkit-outer-spin-button {
+    filter: invert(1) brightness(0.8);
+  }
 </style>
 </head>
   <body class="bg-gray-100">
