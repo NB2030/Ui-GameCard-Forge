@@ -16,10 +16,12 @@ import RightPanel from './components/RightPanel';
 import SettingsModal from './components/SettingsModal';
 import useCardConfig from './hooks/useCardConfig';
 import { useAppSettings } from './hooks/useAppSettings';
+import { useHistory } from './hooks/useHistory';
 import { darkenColor } from './utils/color';
 import type { CustomFont, Layout, Theme, CardConfig, BaseLayoutId } from './types';
 import { downloadJson } from './utils/exportUtils';
 import { validateCardConfig, sanitizeString } from './utils/validation';
+import { layouts as initialLayouts } from './themes';
 
 /**
  * The main application component.
@@ -27,18 +29,62 @@ import { validateCardConfig, sanitizeString } from './utils/validation';
  */
 const App: React.FC = () => {
   const {
-    config,
-    setConfig,
+    config: baseConfig,
+    setConfig: setBaseConfig,
     activeLayoutId,
     setActiveLayoutId,
     activeBaseLayoutId,
     setActiveBaseLayoutId,
-    handleLayoutChange,
-    handleThemeChange,
+    handleLayoutChange: baseHandleLayoutChange,
+    handleThemeChange: baseHandleThemeChange,
     allLayouts,
     setAllLayouts
   } = useCardConfig();
-  
+
+  const {
+    state: config,
+    setState: setConfig,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    reset: resetHistory
+  } = useHistory<CardConfig>(baseConfig);
+
+  useEffect(() => {
+    setBaseConfig(config);
+  }, [config, setBaseConfig]);
+
+  useEffect(() => {
+    setConfig(baseConfig, true);
+  }, [baseConfig]);
+
+  const handleLayoutChange = (layoutId: string) => {
+    baseHandleLayoutChange(layoutId);
+  };
+
+  const handleThemeChange = (themeName: string) => {
+    baseHandleThemeChange(themeName);
+  };
+
+  const getInitialConfig = (): CardConfig => {
+    const firstLayout = initialLayouts[0];
+    const firstTheme = firstLayout.themes[0];
+    return {
+      ...firstTheme.config,
+      image: config.image,
+      customCurrencyIcon: config.customCurrencyIcon,
+    };
+  };
+
+  const handleReset = () => {
+    if (window.confirm('Are you sure you want to reset all customization settings? This action cannot be undone.')) {
+      const initialConfig = getInitialConfig();
+      setConfig(initialConfig);
+      resetHistory(initialConfig);
+    }
+  };
+
   const { settings, updateSettings, resetSettings } = useAppSettings();
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
@@ -322,6 +368,11 @@ const App: React.FC = () => {
         buttonWithHoverSvgContainerRef={buttonWithHoverSvgContainerRef}
         onError={(message) => setError(message)}
         onOpenSettings={() => setIsSettingsModalOpen(true)}
+        onUndo={undo}
+        onRedo={redo}
+        onReset={handleReset}
+        canUndo={canUndo}
+        canRedo={canRedo}
         isDark={isDark}
       />
 
