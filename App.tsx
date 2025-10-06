@@ -14,6 +14,7 @@ import DownloadDropdown from './components/DownloadDropdown';
 import HeaderToolbar from './components/HeaderToolbar';
 import RightPanel from './components/RightPanel';
 import SettingsModal from './components/SettingsModal';
+import LicenseGate from './components/auth/LicenseGate';
 import useCardConfig from './hooks/useCardConfig';
 import { useAppSettings } from './hooks/useAppSettings';
 import { useHistory } from './hooks/useHistory';
@@ -353,13 +354,14 @@ const App: React.FC = () => {
   }, [isDark]);
 
   return (
-    <div
-      className={`h-screen w-full flex flex-col font-sans ${
-        isDark ? 'bg-[#0f172a]' : 'bg-[#F9FAFB]'
-      }`}
-    >
+    <LicenseGate isDark={isDark}>
+      <div
+        className={`h-screen w-full flex flex-col font-sans ${
+          isDark ? 'bg-[#0f172a]' : 'bg-[#F9FAFB]'
+        }`}
+      >
 
-      <HeaderToolbar
+        <HeaderToolbar
         onConfigExport={handleConfigExport}
         onConfigImport={handleConfigImport}
         config={config}
@@ -492,7 +494,8 @@ const App: React.FC = () => {
             />
           </div>
       </div>
-    </div>
+      </div>
+    </LicenseGate>
   );
 };
 
