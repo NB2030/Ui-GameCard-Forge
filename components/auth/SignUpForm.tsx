@@ -20,12 +20,12 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ isDark, onSuccess, onSwitchToSi
     setError('');
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('كلمتا المرور غير متطابقتين');
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
+      setError('يجب أن تكون كلمة المرور 6 أحرف على الأقل');
       return;
     }
 
@@ -35,7 +35,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ isDark, onSuccess, onSwitchToSi
       await signUp(email, password, fullName);
       onSuccess();
     } catch (err: any) {
-      setError(err.message || 'An error occurred while creating the account');
+      setError(err.message || 'حدث خطأ أثناء إنشاء الحساب');
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ isDark, onSuccess, onSwitchToSi
         <label className={`block text-sm font-medium mb-2 ${
           isDark ? 'text-gray-300' : 'text-gray-700'
         }`}>
-          Full Name
+          الاسم الكامل
         </label>
         <input
           type="text"
@@ -65,7 +65,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ isDark, onSuccess, onSwitchToSi
               ? 'bg-[#0f172a] border-[#334155] text-white focus:border-cyan-500'
               : 'bg-white border-gray-300 text-gray-900 focus:border-cyan-500'
           } focus:outline-none focus:ring-2 focus:ring-cyan-500/20`}
-          placeholder="Enter your full name"
+          placeholder="أدخل اسمك الكامل"
         />
       </div>
 
@@ -73,7 +73,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ isDark, onSuccess, onSwitchToSi
         <label className={`block text-sm font-medium mb-2 ${
           isDark ? 'text-gray-300' : 'text-gray-700'
         }`}>
-          Email Address
+          البريد الإلكتروني
         </label>
         <input
           type="email"
@@ -93,7 +93,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ isDark, onSuccess, onSwitchToSi
         <label className={`block text-sm font-medium mb-2 ${
           isDark ? 'text-gray-300' : 'text-gray-700'
         }`}>
-          Password
+          كلمة المرور
         </label>
         <input
           type="password"
@@ -113,7 +113,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ isDark, onSuccess, onSwitchToSi
         <label className={`block text-sm font-medium mb-2 ${
           isDark ? 'text-gray-300' : 'text-gray-700'
         }`}>
-          Confirm Password
+          تأكيد كلمة المرور
         </label>
         <input
           type="password"
@@ -138,18 +138,18 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ isDark, onSuccess, onSwitchToSi
             : 'bg-cyan-500 hover:bg-cyan-600 active:scale-[0.98]'
         } text-white`}
       >
-        {loading ? 'Creating Account...' : 'Create Account'}
+        {loading ? 'جاري إنشاء الحساب...' : 'إنشاء حساب'}
       </button>
 
       <div className="text-center mt-6">
         <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-          Already have an account?{' '}
+          لديك حساب بالفعل؟{' '}
           <button
             type="button"
             onClick={onSwitchToSignIn}
             className="text-cyan-500 hover:text-cyan-600 font-semibold"
           >
-            Sign In
+            تسجيل الدخول
           </button>
         </p>
       </div>

@@ -23,7 +23,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ isOpen, onClose, onSuccess,
       onSuccess();
       onClose();
     } catch (err: any) {
-      setError(err.message || 'An error occurred during license activation');
+      setError(err.message || 'حدث خطأ أثناء تفعيل الترخيص');
     } finally {
       setLoading(false);
     }
@@ -67,12 +67,12 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ isOpen, onClose, onSuccess,
               <h2 className={`text-3xl font-bold mb-2 ${
                 isDark ? 'text-white' : 'text-gray-900'
               }`}>
-                Activate License
+                تفعيل الترخيص
               </h2>
               <p className={`text-sm ${
                 isDark ? 'text-gray-400' : 'text-gray-600'
               }`}>
-                Enter your license key to activate the software.
+                أدخل مفتاح الترخيص الخاص بك لتفعيل البرنامج
               </p>
             </div>
 
@@ -87,7 +87,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ isOpen, onClose, onSuccess,
                 <label className={`block text-sm font-medium mb-2 ${
                   isDark ? 'text-gray-300' : 'text-gray-700'
                 }`}>
-                  License Key
+                  مفتاح الترخيص
                 </label>
                 <input
                   type="text"
@@ -112,7 +112,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ isOpen, onClose, onSuccess,
                     : 'bg-cyan-500 hover:bg-cyan-600 active:scale-[0.98]'
                 } text-white`}
               >
-                {loading ? 'Activating...' : 'Activate License'}
+                {loading ? 'جاري التفعيل...' : 'تفعيل الترخيص'}
               </button>
             </form>
 
@@ -120,7 +120,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ isOpen, onClose, onSuccess,
               isDark ? 'bg-[#0f172a]' : 'bg-gray-50'
             }`}>
               <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                Note: You can get your license key from your admin dashboard.
+                ملاحظة: يمكنك الحصول على مفتاح الترخيص من لوحة الإدارة الخاصة بك
               </p>
             </div>
           </div>
