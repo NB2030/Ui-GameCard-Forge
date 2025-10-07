@@ -1,30 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { getUserProfile } from '../services/license';
 
+// --- SVG Icons for the new design ---
+const UserCircleIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0012 11z" clipRule="evenodd" /></svg>;
+const MailIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>;
+const CalendarIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg>;
+const KeyIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a4 4 0 100 8 4 4 0 000-8z" clipRule="evenodd" /></svg>;
+const CloseIcon = () => <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>;
+
+interface ProfileData {
+  profile: { id: string; email: string; full_name: string; created_at: string; };
+  licenses: { activated_at: string; expires_at: string; is_active: boolean; licenses: { license_key: string; } }[];
+  activeLicense: any;
+}
+
 interface UserProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
   isDark: boolean;
 }
 
-interface ProfileData {
-  profile: {
-    id: string;
-    email: string;
-    full_name: string;
-    created_at: string;
-    updated_at: string;
-  };
-  licenses: Array<{
-    uuid: string;
-    license_key: string;
-    activated_at: string;
-    expires_at: string;
-    is_active: boolean;
-    last_validated: string;
-  }>;
-  activeLicense: any;
-}
+const InfoItem: React.FC<{ icon: React.ReactNode; label: string; value: string; isDark: boolean;}> = ({ icon, label, value, isDark }) => (
+  <div>
+    <div className={`flex items-center gap-2 text-sm ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>
+      {icon}
+      <span>{label}</span>
+    </div>
+    <p className={`mt-1 text-base font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>{value}</p>
+  </div>
+);
 
 const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onClose, isDark }) => {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
@@ -32,231 +36,87 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onClose, is
 
   useEffect(() => {
     if (isOpen) {
-      loadProfile();
+      setLoading(true);
+      getUserProfile()
+        .then(setProfileData)
+        .catch(err => console.error('Failed to load profile:', err))
+        .finally(() => setLoading(false));
     }
   }, [isOpen]);
 
-  const loadProfile = async () => {
-    try {
-      setLoading(true);
-      const data = await getUserProfile();
-      setProfileData(data);
-    } catch (error) {
-      console.error('Failed to load profile:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (!isOpen) return null;
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('ar-SA', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
+  const formatDate = (date: string) => new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
   const getLicenseStatus = () => {
-    if (!profileData?.activeLicense) {
-      return { text: 'غير مفعل', color: 'red' };
-    }
-    const expiresAt = new Date(profileData.activeLicense.expires_at);
-    const now = new Date();
-    const daysLeft = Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    if (!profileData?.activeLicense) return { text: 'Inactive', color: 'red' };
+    const expires = new Date(profileData.activeLicense.expires_at);
+    if (expires < new Date()) return { text: 'Expired', color: 'red' };
+    return { text: 'Active', color: 'green' };
+  };
 
-    if (daysLeft <= 0) {
-      return { text: 'منتهي الصلاحية', color: 'red' };
-    } else if (daysLeft <= 7) {
-      return { text: `ينتهي خلال ${daysLeft} أيام`, color: 'yellow' };
-    } else {
-      return { text: 'نشط', color: 'green' };
-    }
+  const status = getLicenseStatus();
+  const statusColorClasses = {
+    red: isDark ? 'bg-red-500/10 text-red-400' : 'bg-red-100 text-red-700',
+    green: isDark ? 'bg-green-500/10 text-green-400' : 'bg-green-100 text-green-700',
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={onClose}>
-      <div
-        className={`w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden ${
-          isDark ? 'bg-[#1e293b]' : 'bg-white'
-        }`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className={`px-6 py-4 border-b ${isDark ? 'border-[#334155] bg-[#0f172a]' : 'border-gray-200 bg-gray-50'}`}>
-          <div className="flex items-center justify-between">
-            <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              الملف الشخصي
-            </h2>
-            <button
-              onClick={onClose}
-              className={`p-2 rounded-lg transition-colors ${
-                isDark ? 'hover:bg-[#334155] text-gray-400' : 'hover:bg-gray-200 text-gray-600'
-              }`}
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
+      <div className={`w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden transform transition-all ${isDark ? 'bg-slate-800' : 'bg-white'}`} onClick={e => e.stopPropagation()}>
+        <header className={`px-8 py-5 border-b flex items-center justify-between ${isDark ? 'border-slate-700' : 'border-gray-200'}`}>
+          <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>User Account & License Information</h2>
+          <button onClick={onClose} className={`p-2 rounded-full transition-colors ${isDark ? 'hover:bg-slate-700' : 'hover:bg-gray-200'}`}><CloseIcon /></button>
+        </header>
 
-        <div className="p-6 max-h-[70vh] overflow-y-auto">
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500"></div>
-            </div>
-          ) : profileData ? (
-            <div className="space-y-6">
-              <div className={`flex items-center gap-4 p-4 rounded-lg ${
-                isDark ? 'bg-[#0f172a]' : 'bg-gray-50'
-              }`}>
-                <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold ${
-                  isDark ? 'bg-cyan-500/10 text-cyan-400' : 'bg-cyan-100 text-cyan-600'
-                }`}>
-                  {profileData.profile.full_name ? profileData.profile.full_name.charAt(0).toUpperCase() : profileData.profile.email.charAt(0).toUpperCase()}
+        {loading ? (
+          <div className="h-[450px] flex items-center justify-center"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-cyan-500"></div></div>
+        ) : profileData ? (
+          <div className="md:grid md:grid-cols-12 min-h-[450px]">
+            <aside className={`md:col-span-4 p-8 ${isDark ? 'bg-slate-900/50' : 'bg-gray-50'}`}>
+              <div className="flex flex-col items-center text-center">
+                <div className={`w-28 h-28 rounded-full flex items-center justify-center text-5xl font-bold shrink-0 mb-4 ${isDark ? 'bg-cyan-500/10 text-cyan-400 border-2 border-cyan-500/20' : 'bg-cyan-100 text-cyan-600'}`}>
+                  {profileData.profile.full_name?.charAt(0).toUpperCase() || 'U'}
                 </div>
-                <div className="flex-1">
-                  <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                    {profileData.profile.full_name || 'مستخدم'}
-                  </h3>
-                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {profileData.profile.email}
-                  </p>
-                </div>
+                <h3 className={`text-2xl font-bold truncate ${isDark ? 'text-white' : 'text-gray-900'}`}>{profileData.profile.full_name}</h3>
+                <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>{profileData.profile.email}</p>
+                <p className={`text-xs mt-4 ${isDark ? 'text-slate-500' : 'text-gray-400'}`}>Member since {formatDate(profileData.profile.created_at)}</p>
               </div>
+            </aside>
 
-              <div className={`p-4 rounded-lg border ${
-                isDark ? 'bg-[#0f172a] border-[#334155]' : 'bg-white border-gray-200'
-              }`}>
-                <h4 className={`text-sm font-semibold mb-3 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                  معلومات الحساب
-                </h4>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>معرف المستخدم</span>
-                    <span className={`font-mono text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                      {profileData.profile.id.substring(0, 8)}...
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>تاريخ التسجيل</span>
-                    <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>
-                      {formatDate(profileData.profile.created_at)}
-                    </span>
-                  </div>
+            <main className="md:col-span-8 p-8">
+              <h3 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>Active License Details</h3>
+              {profileData.activeLicense ? (
+                <div className={`p-6 rounded-xl space-y-5 ${isDark ? 'bg-slate-700/50' : 'bg-gray-50 border'}`}>
+                  <InfoItem isDark={isDark} icon={<UserCircleIcon />} label="License Status" value={<span className={`px-3 py-1 text-sm rounded-full ${statusColorClasses[status.color]}`}>{status.text}</span>} />
+                  <InfoItem isDark={isDark} icon={<KeyIcon />} label="License Key" value={profileData.activeLicense.licenses.license_key} />
+                  <InfoItem isDark={isDark} icon={<CalendarIcon />} label="Activation Date" value={formatDate(profileData.activeLicense.activated_at)} />
+                  <InfoItem isDark={isDark} icon={<CalendarIcon />} label="Expiration Date" value={formatDate(profileData.activeLicense.expires_at)} />
                 </div>
-              </div>
-
-              <div className={`p-4 rounded-lg border ${
-                isDark ? 'bg-[#0f172a] border-[#334155]' : 'bg-white border-gray-200'
-              }`}>
-                <h4 className={`text-sm font-semibold mb-3 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                  حالة الترخيص
-                </h4>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>الحالة</span>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      getLicenseStatus().color === 'green'
-                        ? isDark ? 'bg-green-500/10 text-green-400' : 'bg-green-100 text-green-700'
-                        : getLicenseStatus().color === 'yellow'
-                        ? isDark ? 'bg-yellow-500/10 text-yellow-400' : 'bg-yellow-100 text-yellow-700'
-                        : isDark ? 'bg-red-500/10 text-red-400' : 'bg-red-100 text-red-700'
-                    }`}>
-                      {getLicenseStatus().text}
-                    </span>
-                  </div>
-
-                  {profileData.activeLicense && (
-                    <>
-                      <div className="flex justify-between">
-                        <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>مفتاح الترخيص</span>
-                        <span className={`font-mono text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                          {profileData.activeLicense.license_key.substring(0, 20)}...
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>تاريخ التفعيل</span>
-                        <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>
-                          {formatDate(profileData.activeLicense.activated_at)}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>تاريخ الانتهاء</span>
-                        <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>
-                          {formatDate(profileData.activeLicense.expires_at)}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>آخر تحقق</span>
-                        <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>
-                          {formatDate(profileData.activeLicense.last_validated)}
-                        </span>
-                      </div>
-                    </>
-                  )}
+              ) : (
+                <div className={`p-6 rounded-xl text-center ${isDark ? 'bg-slate-700/50' : 'bg-gray-50 border'}`}>
+                  <p className={isDark ? 'text-slate-300' : 'text-gray-600'}>No active license found.</p>
                 </div>
-              </div>
+              )}
 
               {profileData.licenses.length > 1 && (
-                <div className={`p-4 rounded-lg border ${
-                  isDark ? 'bg-[#0f172a] border-[#334155]' : 'bg-white border-gray-200'
-                }`}>
-                  <h4 className={`text-sm font-semibold mb-3 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                    سجل التراخيص ({profileData.licenses.length})
-                  </h4>
-                  <div className="space-y-2">
-                    {profileData.licenses.map((license) => (
-                      <div
-                        key={license.uuid}
-                        className={`p-3 rounded-lg text-xs ${
-                          isDark ? 'bg-[#1e293b]' : 'bg-gray-50'
-                        }`}
-                      >
-                        <div className="flex justify-between items-center">
-                          <span className={`font-mono ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                            {license.license_key.substring(0, 30)}...
-                          </span>
-                          <span className={`px-2 py-0.5 rounded text-xs ${
-                            license.is_active && new Date(license.expires_at) > new Date()
-                              ? isDark ? 'bg-green-500/10 text-green-400' : 'bg-green-100 text-green-700'
-                              : isDark ? 'bg-gray-500/10 text-gray-400' : 'bg-gray-100 text-gray-600'
-                          }`}>
-                            {license.is_active && new Date(license.expires_at) > new Date() ? 'نشط' : 'منتهي'}
-                          </span>
-                        </div>
+                <div className="mt-6">
+                  <h3 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-800'}`}>License History</h3>
+                  <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
+                    {profileData.licenses.filter(l => l.id !== profileData.activeLicense?.id).map((l, i) => (
+                      <div key={i} className={`p-3 rounded-lg text-sm ${isDark ? 'bg-slate-700/50' : 'bg-gray-50 border'}`}>
+                        <p className="font-mono">{l.licenses.license_key}</p>
+                        <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-gray-400'}`}>Activated: {formatDate(l.activated_at)} - Expired: {formatDate(l.expires_at)}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>
-                فشل تحميل بيانات الملف الشخصي
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className={`px-6 py-4 border-t ${
-          isDark ? 'border-[#334155] bg-[#0f172a]' : 'border-gray-200 bg-gray-50'
-        }`}>
-          <button
-            onClick={onClose}
-            className={`w-full py-2.5 px-4 rounded-lg font-semibold transition-colors ${
-              isDark
-                ? 'bg-[#334155] hover:bg-[#475569] text-white'
-                : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-            }`}
-          >
-            إغلاق
-          </button>
-        </div>
+            </main>
+          </div>
+        ) : (
+          <div className="h-[450px] flex items-center justify-center"><p className={isDark ? 'text-slate-400' : 'text-gray-600'}>Failed to load profile data.</p></div>
+        )}
       </div>
     </div>
   );
