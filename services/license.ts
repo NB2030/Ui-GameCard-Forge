@@ -1,192 +1,158 @@
 import { supabase } from '../lib/supabase';
 
-const OFFLINE_LICENSE_KEY = 'app_license_offline';
-
-interface OfflineLicenseData {
-  userId: string;
-  email: string;
-  fullName: string;
-  licenseKey: string;
-  expiresAt: string;
-  lastValidated: string;
-}
-
-function saveOfflineLicense(data: OfflineLicenseData) {
-  try {
-    localStorage.setItem(OFFLINE_LICENSE_KEY, JSON.stringify({
-      userId: data.userId,
-      email: data.email,
-      fullName: data.fullName,
-      licenseKey: data.licenseKey,
-      expiresAt: data.expiresAt,
-      lastValidated: new Date().toISOString(),
-    }));
-  } catch (error) {
-    console.error('Failed to save offline license:', error);
-  }
-}
-
-function checkOfflineLicense(): { isValid: boolean; data?: OfflineLicenseData; message?: string } {
-  try {
-    const data = localStorage.getItem(OFFLINE_LICENSE_KEY);
-    if (!data) return { isValid: false };
-
-    const license: OfflineLicenseData = JSON.parse(data);
-    const now = new Date();
-    const expiresAt = new Date(license.expiresAt);
-
-    if (expiresAt <= now) {
-      return { isValid: false, message: 'انتهت صلاحية الترخيص' };
-    }
-
-    return { isValid: true, data: license };
-  } catch (error) {
-    console.error('Failed to check offline license:', error);
-    return { isValid: false };
-  }
-}
-
-export async function activateLicense(licenseKey: string) {
+/**
+ * Checks if the current user has a valid, active license.
+ * This is the function that was causing the build to fail.
+ * It's now implemented to use direct Supabase queries.
+ */
+export async function checkUserLicense() {
   const { data: { session } } = await supabase.auth.getSession();
-
-  if (!session) {
-    throw new Error('يجب تسجيل الدخول أولاً');
+  if (!session?.user) {
+    return { isValid: false, message: 'User not authenticated.' };
   }
 
-  const response = await fetch(
-    'https://iwipefxjymkqpsuxkupo.supabase.co/functions/v1/activate-license',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.access_token}`,
-      },
-      body: JSON.stringify({ licenseKey }),
-    }
-  );
+  const { data: activeLicense, error } = await supabase
+    .from('user_licenses')
+    .select('*, licenses(*)')
+    .eq('user_id', session.user.id)
+    .eq('is_active', true)
+    .gt('expires_at', new Date().toISOString())
+    .maybeSingle();
 
-  const data = await response.json();
-
-  if (!data.success) {
-    throw new Error(data.message);
+  if (error) {
+    console.error('Error checking user license:', error);
+    return { isValid: false, message: 'An error occurred while checking the license.' };
   }
 
-  if (data.license) {
-    saveOfflineLicense({
-      userId: session.user.id,
-      email: session.user.email || '',
-      fullName: data.license.fullName || '',
-      licenseKey: data.license.licenseKey,
-      expiresAt: data.license.expiresAt,
-      lastValidated: new Date().toISOString(),
-    });
+  if (activeLicense) {
+    return { isValid: true, license: activeLicense };
   }
 
-  return data;
+  return { isValid: false, message: 'No active license found.' };
 }
 
+/**
+ * Activates a license for the current user using direct database operations.
+ * @param {string} licenseKey - The license key to activate.
+ * @returns {Promise<object>} An object indicating success and the new license details.
+ */
+export async function activateLicense(licenseKey: string) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    throw new Error('You must be logged in to activate a license.');
+  }
+
+  // 1. Find the license by key in the 'licenses' table.
+  const { data: license, error: licenseError } = await supabase
+    .from('licenses')
+    .select('*')
+    .eq('license_key', licenseKey)
+    .single();
+
+  if (licenseError || !license) {
+    throw new Error('The provided license key is invalid or does not exist.');
+  }
+
+  // 2. Check if the license is active and has activations remaining.
+  if (!license.is_active) {
+    throw new Error('This license key is not active.');
+  }
+  if (license.current_activations >= license.max_activations) {
+    throw new Error('This license has reached its maximum number of activations.');
+  }
+
+  // 3. Check if the user already has an active license.
+  const { data: existingLicense, error: existingLicenseError } = await supabase
+    .from('user_licenses')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('is_active', true)
+    .gt('expires_at', new Date().toISOString())
+    .maybeSingle();
+
+  if (existingLicenseError) {
+    console.error('Error checking existing license:', existingLicenseError);
+    throw new Error('Could not verify existing licenses.');
+  }
+
+  if (existingLicense) {
+    throw new Error('You already have an active license.');
+  }
+
+  // 4. Create the user license record.
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + license.duration_days);
+
+  const { data: newUserLicense, error: insertError } = await supabase
+    .from('user_licenses')
+    .insert({
+      user_id: user.id,
+      license_id: license.id,
+      activated_at: new Date().toISOString(),
+      expires_at: expiresAt.toISOString(),
+      is_active: true,
+    })
+    .select()
+    .single();
+
+  if (insertError) {
+    console.error('Error activating license:', insertError);
+    throw new Error('Could not activate the license. Please try again.');
+  }
+
+  // 5. Increment the activation count for the license.
+  const { error: updateError } = await supabase
+    .from('licenses')
+    .update({ current_activations: license.current_activations + 1 })
+    .eq('id', license.id);
+
+  if (updateError) {
+    // Log the error but don't block the user, as the license is already granted.
+    console.error('Failed to update license activation count:', updateError);
+  }
+
+  return { success: true, license: newUserLicense };
+}
+
+/**
+ * Fetches the complete profile for the current user, including license history.
+ * @returns {Promise<object>} An object containing the user's profile, all their licenses, and their currently active license.
+ */
 export async function getUserProfile() {
   const { data: { session } } = await supabase.auth.getSession();
-
-  if (!session) {
-    throw new Error('يجب تسجيل الدخول أولاً');
+  if (!session?.user) {
+    throw new Error('User not authenticated.');
   }
 
+  // Fetch user profile from 'profiles' table
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', session.user.id)
-    .maybeSingle();
+    .single();
 
   if (profileError) {
-    throw profileError;
+    console.error('Error fetching profile:', profileError);
+    throw new Error('Could not fetch user profile.');
   }
 
+  // Fetch all licenses associated with the user
   const { data: licenses, error: licensesError } = await supabase
     .from('user_licenses')
-    .select('*')
+    .select('*, licenses(license_key, duration_days)')
     .eq('user_id', session.user.id)
     .order('activated_at', { ascending: false });
 
   if (licensesError) {
-    throw licensesError;
+    console.error('Error fetching user licenses:', licensesError);
+    throw new Error('Could not fetch user licenses.');
   }
 
   const activeLicense = licenses?.find(l => l.is_active && new Date(l.expires_at) > new Date());
 
   return {
-    profile: profile || {
-      id: session.user.id,
-      email: session.user.email || '',
-      full_name: '',
-      created_at: session.user.created_at,
-      updated_at: session.user.created_at,
-    },
+    profile,
     licenses: licenses || [],
     activeLicense: activeLicense || null,
   };
-}
-
-export async function checkUserLicense() {
-  const { data: { session } } = await supabase.auth.getSession();
-
-  if (!session) {
-    throw new Error('يجب تسجيل الدخول أولاً');
-  }
-
-  try {
-    const response = await fetch(
-      'https://iwipefxjymkqpsuxkupo.supabase.co/functions/v1/validate-license',
-      {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    if (!data.isValid) {
-      const offlineCheck = checkOfflineLicense();
-      if (offlineCheck.isValid && offlineCheck.data) {
-        return {
-          isValid: true,
-          expiresAt: offlineCheck.data.expiresAt,
-          license: offlineCheck.data,
-          offline: true,
-        };
-      }
-      return { isValid: false, message: data.message };
-    }
-
-    if (data.license) {
-      saveOfflineLicense({
-        userId: session.user.id,
-        email: session.user.email || '',
-        fullName: data.license.fullName || '',
-        licenseKey: data.license.licenseKey,
-        expiresAt: data.expiresAt,
-        lastValidated: new Date().toISOString(),
-      });
-    }
-
-    return {
-      isValid: true,
-      expiresAt: data.expiresAt,
-      license: data.license,
-    };
-  } catch (error) {
-    console.error('Network error, checking offline license:', error);
-    const offlineCheck = checkOfflineLicense();
-    if (offlineCheck.isValid && offlineCheck.data) {
-      return {
-        isValid: true,
-        expiresAt: offlineCheck.data.expiresAt,
-        license: offlineCheck.data,
-        offline: true,
-      };
-    }
-    throw error;
-  }
 }
