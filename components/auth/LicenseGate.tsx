@@ -2,8 +2,18 @@ import React, { useState, useEffect } from 'react';
 import AuthModal from './AuthModal';
 import LicenseModal from './LicenseModal';
 import { useAuth } from '../../hooks/useAuth';
-import { checkUserLicense } from '../../services/license'; // Corrected import
+import { checkUserLicense } from '../../services/license';
 import { signOut as authSignOut } from '../../services/auth';
+import { 
+  isCachedLicenseValid, 
+  getCachedUserProfile, 
+  enableOfflineMode, 
+  disableOfflineMode,
+  checkNetworkStatus,
+  getOfflineCacheInfo,
+  clearOfflineCache,
+  cacheUserProfile
+} from '../../services/offlineStorage';
 
 interface LicenseGateProps {
   children: React.ReactNode;
@@ -17,26 +27,139 @@ const LicenseGate: React.FC<LicenseGateProps> = ({ children, isDark }) => {
     loading: true,
     message: '',
     offline: false,
+    daysRemaining: 0,
   });
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showLicenseModal, setShowLicenseModal] = useState(false);
 
   const checkLicense = async () => {
-    // This function is now correctly defined in services/license.ts
-    // but we will bypass it for verification.
-    setLicenseStatus({ isValid: true, loading: false, message: 'Verification Bypass', offline: false });
+    setLicenseStatus(prev => ({ ...prev, loading: true }));
+    
+    const isOnline = checkNetworkStatus();
+    console.log('Network status:', isOnline);
+    
+    try {
+      if (isOnline) {
+        // Try to check license online
+        console.log('Checking license online...');
+        try {
+          const result = await checkUserLicense(user!.id);
+          
+          if (result.isValid && result.profile) {
+            // Cache the successful license check
+            cacheUserProfile(result.profile.profile, result.profile.licenses, result.profile.activeLicense);
+            disableOfflineMode();
+            
+            setLicenseStatus({
+              isValid: true,
+              loading: false,
+              message: `License active - ${result.profile.activeLicense?.licenses?.duration_days || 30} days`,
+              offline: false,
+              daysRemaining: result.profile.activeLicense?.licenses?.duration_days || 30
+            });
+            return;
+          } else {
+            // License invalid online - check if we have valid cached data
+            if (isCachedLicenseValid()) {
+              console.log('Using cached license data (online check failed)');
+              const cachedInfo = getOfflineCacheInfo();
+              enableOfflineMode();
+              
+              setLicenseStatus({
+                isValid: true,
+                loading: false,
+                message: 'Using cached license (Online verification failed)',
+                offline: true,
+                daysRemaining: cachedInfo.daysRemaining
+              });
+              return;
+            }
+            
+            // No valid license online or cached
+            setLicenseStatus({
+              isValid: false,
+              loading: false,
+              message: result.message || 'No valid license found',
+              offline: false,
+              daysRemaining: 0
+            });
+          }
+        } catch (onlineError) {
+          console.error('Online license check failed:', onlineError);
+          
+          // Network error - fall back to cached license
+          if (isCachedLicenseValid()) {
+            console.log('Using cached license data (network error)');
+            const cachedInfo = getOfflineCacheInfo();
+            enableOfflineMode();
+            
+            setLicenseStatus({
+              isValid: true,
+              loading: false,
+              message: 'Using cached license (Network error)',
+              offline: true,
+              daysRemaining: cachedInfo.daysRemaining
+            });
+            return;
+          }
+          
+          // No cached license available
+          setLicenseStatus({
+            isValid: false,
+            loading: false,
+            message: 'Cannot verify license - No internet connection and no cached license',
+            offline: true,
+            daysRemaining: 0
+          });
+        }
+      } else {
+        // Offline mode - check cached license
+        console.log('Device is offline, checking cached license...');
+        
+        if (isCachedLicenseValid()) {
+          const cachedInfo = getOfflineCacheInfo();
+          enableOfflineMode();
+          
+          setLicenseStatus({
+            isValid: true,
+            loading: false,
+            message: `Offline mode - Cached license valid`,
+            offline: true,
+            daysRemaining: cachedInfo.daysRemaining
+          });
+        } else {
+          setLicenseStatus({
+            isValid: false,
+            loading: false,
+            message: 'No valid cached license for offline use',
+            offline: true,
+            daysRemaining: 0
+          });
+        }
+      }
+    } catch (error) {
+      console.error('License check error:', error);
+      setLicenseStatus({
+        isValid: false,
+        loading: false,
+        message: 'Error checking license',
+        offline: false,
+        daysRemaining: 0
+      });
+    }
   };
 
   useEffect(() => {
     if (!authLoading && user) {
       checkLicense();
     } else if (!authLoading && !user) {
-        setLicenseStatus({ isValid: false, loading: false, message: '', offline: false });
+        setLicenseStatus({ isValid: false, loading: false, message: '', offline: false, daysRemaining: 0 });
     }
   }, [authLoading, user]);
 
 
   const handleSignOut = () => {
+    clearOfflineCache(); // Clear cached license data
     authSignOut();
     setUser(null);
   };
@@ -82,17 +205,16 @@ const LicenseGate: React.FC<LicenseGateProps> = ({ children, isDark }) => {
     );
   }
 
-  // Bypassing the license check for verification purposes.
-  // The original logic is commented out below.
-  return <>{children}</>;
-
-  /*
+  // Enable license checking with offline support
   if (licenseStatus.loading) {
     return (
       <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-[#0f172a]' : 'bg-gray-50'}`}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-cyan-500 mx-auto mb-4"></div>
           <p className={`text-lg ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Verifying license...</p>
+          {!checkNetworkStatus() && (
+            <p className={`text-sm mt-2 ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`}>Checking offline cache...</p>
+          )}
         </div>
       </div>
     );
@@ -154,7 +276,7 @@ const LicenseGate: React.FC<LicenseGateProps> = ({ children, isDark }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <span className={`text-sm ${isDark ? 'text-yellow-300' : 'text-yellow-800'}`}>
-              Offline Mode - Using cached license
+              Offline Mode - Using cached license (Days remaining: {licenseStatus.daysRemaining})
             </span>
           </div>
         </div>
@@ -162,7 +284,6 @@ const LicenseGate: React.FC<LicenseGateProps> = ({ children, isDark }) => {
       {children}
     </>
   );
-  */
 };
 
 export default LicenseGate;

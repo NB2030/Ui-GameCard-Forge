@@ -1,0 +1,46 @@
+{
+  "sourcePath": "..\\GameCard-Forge-Dev",
+  "syncSettings": {
+    "filesToCopy": [
+      "App.tsx",
+      "index.tsx", 
+      "types.ts",
+      "themes.ts",
+      "index.html",
+      "vite.config.ts",
+      "tsconfig.json"
+    ],
+    "foldersToSync": [
+      "components",
+      "hooks", 
+      "utils",
+      "lib",
+      "services"
+    ],
+    "filesToPreserve": [
+      "main.js",
+      "assets\\*",
+      "package.json",
+      "version-info.json",
+      "build-config.json",
+      "build-release.ps1"
+    ]
+  },
+  "buildSettings": {
+    "cleanBefore": true,
+    "runTests": false,
+    "createBackup": true,
+    "signCode": false,
+    "outputPath": "release"
+  },
+  "versionSettings": {
+    "autoIncrement": true,
+    "incrementType": "patch",
+    "updateFiles": [
+      "package.json",
+      "metadata.json",
+      "main.js"
+    ],
+    "mainJsVersionPattern": "Version: \\d+\\.\\d+\\.\\d+"
+  }
+}

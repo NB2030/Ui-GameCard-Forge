@@ -1,5 +1,7 @@
 {
-  "name": "Last update of GameCard Forge (Beta 2 )",
+  "name": "GameCard Forge",
   "description": "GameCard Forge is an application for designing UI game cards in SVG and PNG formats, allowing you to create fully customizable, high-quality cards for use in games and apps quickly and easily.",
-  "requestFramePermissions": []
+  "author": "DevNader",
+  "requestFramePermissions": [],
+  "version": "1.0.2"
 }
