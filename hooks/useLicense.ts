@@ -6,18 +6,28 @@ interface LicenseStatus {
   expiresAt?: string;
   license?: any;
   message?: string;
+  offline?: boolean;
 }
 
-export const useLicense = (user: any) => {
+interface UseLicenseReturn {
+  licenseStatus: LicenseStatus;
+  loading: boolean;
+  initializing: boolean;
+  recheckLicense: () => Promise<void>;
+}
+
+export const useLicense = (user: any): UseLicenseReturn => {
   const [licenseStatus, setLicenseStatus] = useState<LicenseStatus>({
     isValid: false,
   });
   const [loading, setLoading] = useState(true);
+  const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
     if (!user) {
       setLicenseStatus({ isValid: false });
       setLoading(false);
+      setInitializing(false);
       return;
     }
 
@@ -29,6 +39,9 @@ export const useLicense = (user: any) => {
         setLicenseStatus({ isValid: false });
       } finally {
         setLoading(false);
+        setTimeout(() => {
+          setInitializing(false);
+        }, 500);
       }
     };
 
@@ -49,5 +62,5 @@ export const useLicense = (user: any) => {
     }
   };
 
-  return { licenseStatus, loading, recheckLicense };
+  return { licenseStatus, loading, initializing, recheckLicense };
 };
