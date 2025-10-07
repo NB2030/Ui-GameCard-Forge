@@ -4,28 +4,51 @@ import { supabase } from '../lib/supabase';
  * Checks if the current user has a valid, active license.
  * This is the function that was causing the build to fail.
  * It's now implemented to use direct Supabase queries.
+ * @param {string} userId - The user ID to check license for
  */
-export async function checkUserLicense() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) {
+export async function checkUserLicense(userId: string) {
+  if (!userId) {
     return { isValid: false, message: 'User not authenticated.' };
   }
 
-  const { data: activeLicense, error } = await supabase
+  // Fetch user profile
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single();
+
+  if (profileError) {
+    console.error('Error fetching profile:', profileError);
+    return { isValid: false, message: 'Could not fetch user profile.' };
+  }
+
+  // Fetch all licenses
+  const { data: licenses, error: licensesError } = await supabase
     .from('user_licenses')
     .select('*, licenses(*)')
-    .eq('user_id', session.user.id)
-    .eq('is_active', true)
-    .gt('expires_at', new Date().toISOString())
-    .maybeSingle();
+    .eq('user_id', userId)
+    .order('activated_at', { ascending: false });
 
-  if (error) {
-    console.error('Error checking user license:', error);
+  if (licensesError) {
+    console.error('Error fetching licenses:', licensesError);
     return { isValid: false, message: 'An error occurred while checking the license.' };
   }
 
+  // Find active license
+  const activeLicense = licenses?.find(l => 
+    l.is_active && new Date(l.expires_at) > new Date()
+  );
+
   if (activeLicense) {
-    return { isValid: true, license: activeLicense };
+    return { 
+      isValid: true, 
+      profile: {
+        profile,
+        licenses: licenses || [],
+        activeLicense
+      }
+    };
   }
 
   return { isValid: false, message: 'No active license found.' };
