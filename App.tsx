@@ -15,9 +15,11 @@ import HeaderToolbar from './components/HeaderToolbar';
 import RightPanel from './components/RightPanel';
 import SettingsModal from './components/SettingsModal';
 import LicenseGate from './components/auth/LicenseGate';
+import UserProfileModal from './components/UserProfileModal';
 import useCardConfig from './hooks/useCardConfig';
 import { useAppSettings } from './hooks/useAppSettings';
 import { useHistory } from './hooks/useHistory';
+import { useAuth } from './hooks/useAuth';
 import { darkenColor } from './utils/color';
 import type { CustomFont, Layout, Theme, CardConfig, BaseLayoutId } from './types';
 import { downloadJson } from './utils/exportUtils';
@@ -88,6 +90,8 @@ const App: React.FC = () => {
 
   const { settings, updateSettings, resetSettings } = useAppSettings();
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const { user } = useAuth();
 
   const [error, setError] = useState<string | null>(null);
   const [customFonts, setCustomFonts] = useState<CustomFont[]>([]);
@@ -376,6 +380,8 @@ const App: React.FC = () => {
         canUndo={canUndo}
         canRedo={canRedo}
         isDark={isDark}
+        user={user}
+        onOpenProfile={() => setIsProfileModalOpen(true)}
       />
 
       {error && (
@@ -449,6 +455,12 @@ const App: React.FC = () => {
         settings={settings}
         onSettingsChange={updateSettings}
         onReset={resetSettings}
+      />
+
+      <UserProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        isDark={isDark}
       />
 
       {/* Off-screen containers for standalone SVGs used for export */}

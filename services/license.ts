@@ -85,6 +85,48 @@ export async function activateLicense(licenseKey: string) {
   return data;
 }
 
+export async function getUserProfile() {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session) {
+    throw new Error('يجب تسجيل الدخول أولاً');
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .maybeSingle();
+
+  if (profileError) {
+    throw profileError;
+  }
+
+  const { data: licenses, error: licensesError } = await supabase
+    .from('user_licenses')
+    .select('*')
+    .eq('user_id', session.user.id)
+    .order('activated_at', { ascending: false });
+
+  if (licensesError) {
+    throw licensesError;
+  }
+
+  const activeLicense = licenses?.find(l => l.is_active && new Date(l.expires_at) > new Date());
+
+  return {
+    profile: profile || {
+      id: session.user.id,
+      email: session.user.email || '',
+      full_name: '',
+      created_at: session.user.created_at,
+      updated_at: session.user.created_at,
+    },
+    licenses: licenses || [],
+    activeLicense: activeLicense || null,
+  };
+}
+
 export async function checkUserLicense() {
   const { data: { session } } = await supabase.auth.getSession();
 
