@@ -14,9 +14,12 @@ import DownloadDropdown from './components/DownloadDropdown';
 import HeaderToolbar from './components/HeaderToolbar';
 import RightPanel from './components/RightPanel';
 import SettingsModal from './components/SettingsModal';
+import LicenseGate from './components/auth/LicenseGate';
+import UserProfileModal from './components/UserProfileModal';
 import useCardConfig from './hooks/useCardConfig';
 import { useAppSettings } from './hooks/useAppSettings';
 import { useHistory } from './hooks/useHistory';
+import { useAuth } from './hooks/useAuth';
 import { darkenColor } from './utils/color';
 import type { CustomFont, Layout, Theme, CardConfig, BaseLayoutId } from './types';
 import { downloadJson } from './utils/exportUtils';
@@ -35,6 +38,8 @@ const App: React.FC = () => {
     setActiveLayoutId,
     activeBaseLayoutId,
     setActiveBaseLayoutId,
+    activeThemeName,
+    setActiveThemeName,
     handleLayoutChange: baseHandleLayoutChange,
     handleThemeChange: baseHandleThemeChange,
     allLayouts,
@@ -82,11 +87,17 @@ const App: React.FC = () => {
       const initialConfig = getInitialConfig();
       setConfig(initialConfig);
       resetHistory(initialConfig);
+      setActiveLayoutId('vertical');
+      setActiveBaseLayoutId('vertical');
+      // Also reset the active theme name to the default.
+      setActiveThemeName(initialLayouts[0].themes[0].name);
     }
   };
 
   const { settings, updateSettings, resetSettings } = useAppSettings();
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const { user } = useAuth();
 
   const [error, setError] = useState<string | null>(null);
   const [customFonts, setCustomFonts] = useState<CustomFont[]>([]);
@@ -353,13 +364,14 @@ const App: React.FC = () => {
   }, [isDark]);
 
   return (
-    <div
-      className={`h-screen w-full flex flex-col font-sans ${
-        isDark ? 'bg-[#0f172a]' : 'bg-[#F9FAFB]'
-      }`}
-    >
+    <LicenseGate isDark={isDark}>
+      <div
+        className={`h-screen w-full flex flex-col font-sans ${
+          isDark ? 'bg-[#0f172a]' : 'bg-[#F9FAFB]'
+        }`}
+      >
 
-      <HeaderToolbar
+        <HeaderToolbar
         onConfigExport={handleConfigExport}
         onConfigImport={handleConfigImport}
         config={config}
@@ -374,6 +386,8 @@ const App: React.FC = () => {
         canUndo={canUndo}
         canRedo={canRedo}
         isDark={isDark}
+        user={user}
+        onOpenProfile={() => setIsProfileModalOpen(true)}
       />
 
       {error && (
@@ -430,6 +444,7 @@ const App: React.FC = () => {
           <RightPanel
             layouts={allLayouts}
             activeLayoutId={activeLayoutId}
+            activeThemeName={activeThemeName}
             onLayoutChange={handleLayoutChange}
             onThemeChange={handleThemeChange}
             config={config}
@@ -447,6 +462,12 @@ const App: React.FC = () => {
         settings={settings}
         onSettingsChange={updateSettings}
         onReset={resetSettings}
+      />
+
+      <UserProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        isDark={isDark}
       />
 
       {/* Off-screen containers for standalone SVGs used for export */}
@@ -492,7 +513,8 @@ const App: React.FC = () => {
             />
           </div>
       </div>
-    </div>
+      </div>
+    </LicenseGate>
   );
 };
 

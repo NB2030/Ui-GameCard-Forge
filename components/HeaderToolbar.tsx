@@ -5,6 +5,7 @@
 import React from 'react';
 import type { CardConfig } from '../types';
 import DownloadDropdown from './DownloadDropdown';
+import UserDropdown from './UserDropdown';
 
 // --- UI Icons ---
 const ExportIcon = () => (
@@ -19,11 +20,6 @@ const ImportIcon = () => (
     </svg>
 );
 
-const AppIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-    </svg>
-);
 
 const SettingsIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -83,6 +79,10 @@ interface HeaderToolbarProps {
   canUndo?: boolean;
   /** @type {boolean} Indicates if redo is available. */
   canRedo?: boolean;
+  /** @type {any} Current user object. */
+  user?: any;
+  /** @type {() => void} Callback function to open user profile modal. */
+  onOpenProfile?: () => void;
 }
 
 /**
@@ -104,7 +104,9 @@ const HeaderToolbar: React.FC<HeaderToolbarProps> = ({
   onRedo,
   onReset,
   canUndo = false,
-  canRedo = false
+  canRedo = false,
+  user,
+  onOpenProfile
 }) => {
   return (
     <div className={`h-14 flex items-center justify-between px-6 shadow-sm ${
@@ -112,15 +114,9 @@ const HeaderToolbar: React.FC<HeaderToolbarProps> = ({
     }`}>
 
       <div className="flex items-center">
-        <div className={isDark ? 'text-cyan-400' : 'text-gray-800'}>
-          <AppIcon />
-        </div>
-        <h1 className={`text-lg font-semibold ${
-          isDark ? 'text-white' : 'text-gray-800'
-        }`}>GameCard Forge</h1>
-        <span className={`ml-2 px-2 py-1 text-xs rounded-full font-medium ${
-          isDark ? 'bg-cyan-500/10 text-cyan-400' : 'bg-blue-100 text-blue-600'
-        }`}>Beta</span>
+        {user && onOpenProfile && (
+          <UserDropdown user={user} onOpenProfile={onOpenProfile} isDark={isDark} />
+        )}
       </div>
 
       <div className="flex items-center gap-3">
