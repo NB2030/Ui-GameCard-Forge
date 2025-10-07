@@ -17,6 +17,8 @@ interface RightPanelProps {
   layouts: Layout[];
   /** @type {LayoutId} The ID of the currently selected layout category. */
   activeLayoutId: LayoutId;
+  /** @type {string} The unique name of the currently active theme. */
+  activeThemeName: string;
   /** @type {(layoutId: LayoutId) => void} Callback to change the active layout category. */
   onLayoutChange: (layoutId: LayoutId) => void;
   /** @type {(themeName: string) => void} Callback to apply a theme to the card. */
@@ -41,6 +43,7 @@ interface RightPanelProps {
 const RightPanel: React.FC<RightPanelProps> = ({
   layouts,
   activeLayoutId,
+  activeThemeName,
   onLayoutChange,
   onThemeChange,
   config,
@@ -79,6 +82,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
           <TemplatesLibraryTab
             layouts={layouts}
             activeLayoutId={activeLayoutId}
+            activeThemeName={activeThemeName}
             onLayoutChange={onLayoutChange}
             onThemeChange={onThemeChange}
             config={config}
