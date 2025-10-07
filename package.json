@@ -1,16 +1,22 @@
 {
-  "name": "last-update-of-gamecard-forge-(beta-2-)",
+  "name": "gamecard-forge",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.2",
+  "description": "GameCard Forge is an application for designing UI game cards in SVG and PNG formats, allowing you to create fully customizable, high-quality cards for use in games and apps quickly and easily.",
+  "author": "DevNader",
+  "main": "main.js",
+  "homepage": "./",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
+    "electron:pack": "npm run build && electron-builder --dir",
+    "electron:build": "npm run build && electron-builder --publish=never",
+    "electron:build-win": "npm run build && electron-builder --win --publish=never"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.74.0",
-    "@tailwindcss/forms": "^0.5.10",
     "jszip": "3.10.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
@@ -18,7 +24,44 @@
   "devDependencies": {
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.0.0",
+    "electron": "^38.1.2",
+    "electron-builder": "^26.0.12",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "wait-on": "^9.0.0"
+  },
+  "build": {
+    "appId": "com.gamecardforge.app",
+    "productName": "GameCard Forge",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": {
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      },
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "extraMetadata": {
+      "main": "main.js"
+    }
   }
 }
