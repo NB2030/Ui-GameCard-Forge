@@ -16,6 +16,8 @@ interface TemplatesLibraryTabProps {
   layouts: Layout[];
   /** @type {LayoutId} The ID of the currently active layout category (e.g., 'vertical', 'imported'). */
   activeLayoutId: LayoutId;
+  /** @type {string} The unique name of the currently active theme. */
+  activeThemeName: string;
   /** @type {(layoutId: LayoutId) => void} Callback function to switch the active layout category. */
   onLayoutChange: (layoutId: LayoutId) => void;
   /** @type {(themeName: string) => void} Callback function to apply a selected theme to the main card. */
@@ -160,6 +162,7 @@ const ThemePreview: React.FC<ThemePreviewProps> = ({ theme, isActive, onClick, i
 const TemplatesLibraryTab: React.FC<TemplatesLibraryTabProps> = ({
   layouts,
   activeLayoutId,
+  activeThemeName,
   onLayoutChange,
   onThemeChange,
   config,
@@ -167,7 +170,7 @@ const TemplatesLibraryTab: React.FC<TemplatesLibraryTabProps> = ({
 }) => {
   const currentLayout = layouts.find(l => l.id === activeLayoutId);
   const currentThemes = currentLayout ? currentLayout.themes : [];
-  const activeTheme = currentThemes.find(theme => theme.config.title === config.title);
+  const activeTheme = currentThemes.find(theme => theme.name === activeThemeName);
 
   return (
     <div className="p-6 space-y-6">
