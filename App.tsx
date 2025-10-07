@@ -85,6 +85,8 @@ const App: React.FC = () => {
       const initialConfig = getInitialConfig();
       setConfig(initialConfig);
       resetHistory(initialConfig);
+      setActiveLayoutId('vertical');
+      setActiveBaseLayoutId('vertical');
     }
   };
 
