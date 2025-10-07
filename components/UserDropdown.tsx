@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { signOut } from '../services/auth';
+import { useAuth } from '../hooks/useAuth';
+import * as authService from '../services/auth';
 
 interface UserDropdownProps {
-  user: any;
   onOpenProfile: () => void;
   isDark: boolean;
 }
 
-const UserDropdown: React.FC<UserDropdownProps> = ({ user, onOpenProfile, isDark }) => {
+const UserDropdown: React.FC<UserDropdownProps> = ({ onOpenProfile, isDark }) => {
+  const { user, setUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -22,28 +23,30 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user, onOpenProfile, isDark
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      window.location.reload();
-    } catch (error) {
-      console.error('Sign out error:', error);
-    }
+  const handleSignOut = () => {
+    authService.signOut();
+    setUser(null);
+    setIsOpen(false);
   };
 
   const getInitials = () => {
-    const email = user?.email || '';
-    const name = user?.user_metadata?.full_name || '';
-
-    if (name) {
-      return name.split(' ').map((n: string) => n[0]).join('').toUpperCase().substring(0, 2);
-    }
-    return email.substring(0, 2).toUpperCase();
+    if (!user) return '';
+    return (user.fullName || user.email || '')
+      .split(' ')
+      .map((n: string) => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
   };
 
   const getDisplayName = () => {
-    return user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'مستخدم';
+    if (!user) return 'Guest';
+    return user.fullName || user.email.split('@')[0];
   };
+
+  if (!user) {
+    return null; // Or a sign-in button if preferred
+  }
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -84,7 +87,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user, onOpenProfile, isDark
               {getDisplayName()}
             </p>
             <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'} mt-0.5 truncate`}>
-              {user?.email}
+              {user.email}
             </p>
           </div>
 
@@ -103,7 +106,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user, onOpenProfile, isDark
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              الملف الشخصي
+              Profile
             </button>
 
             <div className={`my-1 border-t ${isDark ? 'border-[#334155]' : 'border-gray-100'}`}></div>
@@ -119,7 +122,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user, onOpenProfile, isDark
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
-              تسجيل الخروج
+              Sign Out
             </button>
           </div>
         </div>

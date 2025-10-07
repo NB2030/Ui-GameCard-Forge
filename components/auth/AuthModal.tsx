@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
+import { useAuth } from '../../hooks/useAuth';
+import * as authService from '../../services/auth';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -11,8 +13,15 @@ interface AuthModalProps {
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, isDark }) => {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const { setUser } = useAuth();
 
   if (!isOpen) return null;
+
+  const handleAuthSuccess = () => {
+    const user = authService.getStoredUser();
+    setUser(user);
+    onSuccess();
+  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -43,27 +52,27 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, isDar
               <h2 className={`text-3xl font-bold mb-2 ${
                 isDark ? 'text-white' : 'text-gray-900'
               }`}>
-                {mode === 'signin' ? 'تسجيل الدخول' : 'إنشاء حساب جديد'}
+                {mode === 'signin' ? 'Sign In' : 'Create Account'}
               </h2>
               <p className={`text-sm ${
                 isDark ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 {mode === 'signin'
-                  ? 'مرحباً بعودتك! سجل دخولك للمتابعة'
-                  : 'أنشئ حسابك الآن للبدء'}
+                  ? 'Welcome back! Sign in to continue.'
+                  : 'Create your account to get started.'}
               </p>
             </div>
 
             {mode === 'signin' ? (
               <SignInForm
                 isDark={isDark}
-                onSuccess={onSuccess}
+                onSuccess={handleAuthSuccess}
                 onSwitchToSignUp={() => setMode('signup')}
               />
             ) : (
               <SignUpForm
                 isDark={isDark}
-                onSuccess={onSuccess}
+                onSuccess={handleAuthSuccess}
                 onSwitchToSignIn={() => setMode('signin')}
               />
             )}
