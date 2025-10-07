@@ -1,0 +1,25 @@
+directories:
+  output: release
+  buildResources: build
+appId: com.gamecardforge.app
+productName: GameCard Forge
+files:
+  - filter:
+      - main.js
+      - dist/**/*
+      - node_modules/**/*
+      - package.json
+win:
+  target:
+    target: nsis
+    arch:
+      - x64
+  icon: assets/icon.ico
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+extraMetadata:
+  main: main.js
+electronVersion: 38.2.1

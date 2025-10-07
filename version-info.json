@@ -1,0 +1,96 @@
+{
+  "currentVersion": "1.0.2",
+  "lastBuildDate": "2025-10-07",
+  "buildNumber": 17,
+  "versionHistory": [
+    {
+      "version": "1.0.0",
+      "date": "2025-09-18",
+      "notes": "Initial release with Electron support"
+    },
+    {
+      "date": "2025-09-18 21:00:06",
+      "version": "1.0.1",
+      "notes": "Auto-generated release"
+    },
+    {
+      "date": "2025-09-18 21:00:25",
+      "version": "1.0.2",
+      "notes": "Auto-generated release"
+    },
+    {
+      "date": "2025-09-18 21:00:36",
+      "version": "1.0.3",
+      "notes": "Auto-generated release"
+    },
+    {
+      "date": "2025-09-18 21:09:16",
+      "version": "1.0.4",
+      "notes": "Auto-generated release"
+    },
+    {
+      "date": "2025-09-18 21:23:28",
+      "version": "1.0.5",
+      "notes": "Auto-generated release"
+    },
+    {
+      "version": "0.1.0",
+      "date": "2025-09-18 21:26:33",
+      "notes": "Auto-generated release"
+    },
+    {
+      "date": "2025-09-18 21:47:49",
+      "version": "1.0.0",
+      "notes": "Auto-generated release"
+    },
+    {
+      "date": "2025-09-18 21:49:13",
+      "version": "1.0.1",
+      "notes": "Auto-generated release"
+    },
+    {
+      "date": "2025-09-18 21:49:31",
+      "version": "0.1.0",
+      "notes": "Auto-generated release"
+    },
+    {
+      "date": "2025-09-26 04:13:21",
+      "notes": "Auto-generated release",
+      "version": "0.2.0"
+    },
+    {
+      "date": "2025-10-07 08:40:58",
+      "version": "0.2.1",
+      "notes": "Auto-generated release"
+    },
+    {
+      "date": "2025-10-07 08:41:19",
+      "version": "0.2.2",
+      "notes": "Auto-generated release"
+    },
+    {
+      "date": "2025-10-07 08:41:47",
+      "version": "1.0.0",
+      "notes": "Auto-generated release"
+    },
+    {
+      "version": "1.0.0",
+      "notes": "Auto-generated release",
+      "date": "2025-10-07 10:02:17"
+    },
+    {
+      "date": "2025-10-07 10:14:41",
+      "notes": "Auto-generated release",
+      "version": "1.0.1"
+    },
+    {
+      "notes": "Auto-generated release",
+      "version": "1.0.2",
+      "date": "2025-10-07 10:20:02"
+    }
+  ],
+  "autoIncrement": {
+    "type": "patch",
+    "enabled": true
+  }
+}
