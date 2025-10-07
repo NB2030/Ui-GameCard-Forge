@@ -22,7 +22,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ isDark, onSuccess, onSwitchToSi
       await signIn(email, password);
       onSuccess();
     } catch (err: any) {
-      setError(err.message || 'حدث خطأ أثناء تسجيل الدخول');
+      setError(err.message || 'An error occurred during sign-in.');
     } finally {
       setLoading(false);
     }
@@ -40,7 +40,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ isDark, onSuccess, onSwitchToSi
         <label className={`block text-sm font-medium mb-2 ${
           isDark ? 'text-gray-300' : 'text-gray-700'
         }`}>
-          البريد الإلكتروني
+          Email Address
         </label>
         <input
           type="email"
@@ -60,7 +60,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ isDark, onSuccess, onSwitchToSi
         <label className={`block text-sm font-medium mb-2 ${
           isDark ? 'text-gray-300' : 'text-gray-700'
         }`}>
-          كلمة المرور
+          Password
         </label>
         <input
           type="password"
@@ -85,18 +85,18 @@ const SignInForm: React.FC<SignInFormProps> = ({ isDark, onSuccess, onSwitchToSi
             : 'bg-cyan-500 hover:bg-cyan-600 active:scale-[0.98]'
         } text-white`}
       >
-        {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
+        {loading ? 'Signing In...' : 'Sign In'}
       </button>
 
       <div className="text-center mt-6">
         <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-          ليس لديك حساب؟{' '}
+          Don't have an account?{' '}
           <button
             type="button"
             onClick={onSwitchToSignUp}
             className="text-cyan-500 hover:text-cyan-600 font-semibold"
           >
-            إنشاء حساب جديد
+            Sign up
           </button>
         </p>
       </div>

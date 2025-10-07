@@ -167,3 +167,15 @@ export interface AppSettings {
   /** The scale factor for the UI (zoom level). */
   uiScale: number;
 }
+
+/**
+ * Defines the structure for a user's profile information.
+ */
+export interface UserProfile {
+  /** The unique identifier for the user. */
+  id: string;
+  /** The user's email address. */
+  email: string;
+  /** The user's full name. */
+  fullName: string;
+}

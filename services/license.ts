@@ -1,32 +1,27 @@
-import { supabase } from '../lib/supabase';
+import * as api from './api';
+import { getUserToken } from './auth';
 
 const OFFLINE_LICENSE_KEY = 'app_license_offline';
 
 interface OfflineLicenseData {
-  userId: string;
-  email: string;
-  fullName: string;
   licenseKey: string;
   expiresAt: string;
   lastValidated: string;
 }
 
-function saveOfflineLicense(data: OfflineLicenseData) {
+function saveOfflineLicense(data: { licenseKey: string; expiresAt: string }) {
   try {
-    localStorage.setItem(OFFLINE_LICENSE_KEY, JSON.stringify({
-      userId: data.userId,
-      email: data.email,
-      fullName: data.fullName,
-      licenseKey: data.licenseKey,
-      expiresAt: data.expiresAt,
+    const offlineData: OfflineLicenseData = {
+      ...data,
       lastValidated: new Date().toISOString(),
-    }));
+    };
+    localStorage.setItem(OFFLINE_LICENSE_KEY, JSON.stringify(offlineData));
   } catch (error) {
     console.error('Failed to save offline license:', error);
   }
 }
 
-function checkOfflineLicense(): { isValid: boolean; data?: OfflineLicenseData; message?: string } {
+function checkOfflineLicense(): { isValid: boolean; license?: OfflineLicenseData; message?: string } {
   try {
     const data = localStorage.getItem(OFFLINE_LICENSE_KEY);
     if (!data) return { isValid: false };
@@ -36,10 +31,11 @@ function checkOfflineLicense(): { isValid: boolean; data?: OfflineLicenseData; m
     const expiresAt = new Date(license.expiresAt);
 
     if (expiresAt <= now) {
-      return { isValid: false, message: 'انتهت صلاحية الترخيص' };
+      localStorage.removeItem(OFFLINE_LICENSE_KEY);
+      return { isValid: false, message: 'انتهت صلاحية الترخيص المخزن' };
     }
 
-    return { isValid: true, data: license };
+    return { isValid: true, license };
   } catch (error) {
     console.error('Failed to check offline license:', error);
     return { isValid: false };
@@ -47,146 +43,42 @@ function checkOfflineLicense(): { isValid: boolean; data?: OfflineLicenseData; m
 }
 
 export async function activateLicense(licenseKey: string) {
-  const { data: { session } } = await supabase.auth.getSession();
-
-  if (!session) {
-    throw new Error('يجب تسجيل الدخول أولاً');
+  const token = getUserToken();
+  if (!token) {
+    throw new Error('User not authenticated');
   }
 
-  const response = await fetch(
-    'https://iwipefxjymkqpsuxkupo.supabase.co/functions/v1/activate-license',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session.access_token}`,
-      },
-      body: JSON.stringify({ licenseKey }),
-    }
-  );
+  const response = await api.activate(licenseKey, token);
 
-  const data = await response.json();
-
-  if (!data.success) {
-    throw new Error(data.message);
+  if (response.success) {
+    // After activation, we should validate to get the full license details and cache them.
+    await validateLicense();
   }
 
-  if (data.license) {
-    saveOfflineLicense({
-      userId: session.user.id,
-      email: session.user.email || '',
-      fullName: data.license.fullName || '',
-      licenseKey: data.license.licenseKey,
-      expiresAt: data.license.expiresAt,
-      lastValidated: new Date().toISOString(),
-    });
-  }
-
-  return data;
+  return response;
 }
 
-export async function getUserProfile() {
-  const { data: { session } } = await supabase.auth.getSession();
-
-  if (!session) {
-    throw new Error('يجب تسجيل الدخول أولاً');
-  }
-
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', session.user.id)
-    .maybeSingle();
-
-  if (profileError) {
-    throw profileError;
-  }
-
-  const { data: licenses, error: licensesError } = await supabase
-    .from('user_licenses')
-    .select('*')
-    .eq('user_id', session.user.id)
-    .order('activated_at', { ascending: false });
-
-  if (licensesError) {
-    throw licensesError;
-  }
-
-  const activeLicense = licenses?.find(l => l.is_active && new Date(l.expires_at) > new Date());
-
-  return {
-    profile: profile || {
-      id: session.user.id,
-      email: session.user.email || '',
-      full_name: '',
-      created_at: session.user.created_at,
-      updated_at: session.user.created_at,
-    },
-    licenses: licenses || [],
-    activeLicense: activeLicense || null,
-  };
-}
-
-export async function checkUserLicense() {
-  const { data: { session } } = await supabase.auth.getSession();
-
-  if (!session) {
-    throw new Error('يجب تسجيل الدخول أولاً');
+export async function validateLicense() {
+  const token = getUserToken();
+  if (!token) {
+    return checkOfflineLicense();
   }
 
   try {
-    const response = await fetch(
-      'https://iwipefxjymkqpsuxkupo.supabase.co/functions/v1/validate-license',
-      {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    if (!data.isValid) {
-      const offlineCheck = checkOfflineLicense();
-      if (offlineCheck.isValid && offlineCheck.data) {
-        return {
-          isValid: true,
-          expiresAt: offlineCheck.data.expiresAt,
-          license: offlineCheck.data,
-          offline: true,
-        };
-      }
-      return { isValid: false, message: data.message };
-    }
-
-    if (data.license) {
+    const response = await api.validate(token);
+    if (response.isValid) {
       saveOfflineLicense({
-        userId: session.user.id,
-        email: session.user.email || '',
-        fullName: data.license.fullName || '',
-        licenseKey: data.license.licenseKey,
-        expiresAt: data.expiresAt,
-        lastValidated: new Date().toISOString(),
+        licenseKey: response.license.key,
+        expiresAt: response.expiresAt,
       });
+    } else {
+      // If the server says the license is invalid, clear the offline cache.
+      localStorage.removeItem(OFFLINE_LICENSE_KEY);
     }
-
-    return {
-      isValid: true,
-      expiresAt: data.expiresAt,
-      license: data.license,
-    };
+    return response;
   } catch (error) {
-    console.error('Network error, checking offline license:', error);
-    const offlineCheck = checkOfflineLicense();
-    if (offlineCheck.isValid && offlineCheck.data) {
-      return {
-        isValid: true,
-        expiresAt: offlineCheck.data.expiresAt,
-        license: offlineCheck.data,
-        offline: true,
-      };
-    }
-    throw error;
+    console.warn('API validation failed, checking offline license:', error);
+    // If the API call fails (e.g., network error), fall back to the offline license.
+    return checkOfflineLicense();
   }
 }
