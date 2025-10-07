@@ -38,6 +38,8 @@ const App: React.FC = () => {
     setActiveLayoutId,
     activeBaseLayoutId,
     setActiveBaseLayoutId,
+    activeThemeName,
+    setActiveThemeName,
     handleLayoutChange: baseHandleLayoutChange,
     handleThemeChange: baseHandleThemeChange,
     allLayouts,
@@ -87,6 +89,8 @@ const App: React.FC = () => {
       resetHistory(initialConfig);
       setActiveLayoutId('vertical');
       setActiveBaseLayoutId('vertical');
+      // Also reset the active theme name to the default.
+      setActiveThemeName(initialLayouts[0].themes[0].name);
     }
   };
 
@@ -440,6 +444,7 @@ const App: React.FC = () => {
           <RightPanel
             layouts={allLayouts}
             activeLayoutId={activeLayoutId}
+            activeThemeName={activeThemeName}
             onLayoutChange={handleLayoutChange}
             onThemeChange={handleThemeChange}
             config={config}

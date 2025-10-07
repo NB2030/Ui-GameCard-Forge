@@ -36,6 +36,14 @@ const useCardConfig = () => {
   const [activeLayoutId, setActiveLayoutId] = useState<LayoutId>('vertical');
 
   /**
+   * @description State for the unique name of the currently active theme. This is used to reliably highlight the correct theme in the UI, especially for imported themes that might share the same title.
+   */
+  const [activeThemeName, setActiveThemeName] = useState<string>(() => {
+    // Initialize with the name of the very first theme.
+    return initialLayouts[0].themes[0].name;
+  });
+
+  /**
    * @description State for the underlying base layout *type* ('vertical' or 'horizontal'). This determines which SVG component (`CardSvg` or `CardSvgHorizontal`) is rendered. It's derived from the selected theme.
    */
   const [activeBaseLayoutId, setActiveBaseLayoutId] = useState<BaseLayoutId>('vertical');
@@ -118,8 +126,9 @@ const useCardConfig = () => {
               ...firstTheme.config,
               image: prevConfig.image, // keep image if it exists
           }));
-          // Also update the base layout ID based on the new theme.
+          // Also update the base layout ID and active theme name.
           setActiveBaseLayoutId(firstTheme.layoutId);
+          setActiveThemeName(firstTheme.name);
         }
     }
   };
@@ -137,8 +146,9 @@ const useCardConfig = () => {
                 ...selectedTheme.config,
                 image: prevConfig.image,
             }));
-            // Update the base layout ID to match the selected theme's type.
+            // Update the base layout ID and active theme name to match the selected theme.
             setActiveBaseLayoutId(selectedTheme.layoutId);
+            setActiveThemeName(selectedTheme.name);
         }
     }
   };
@@ -150,6 +160,8 @@ const useCardConfig = () => {
     setActiveLayoutId,
     activeBaseLayoutId,
     setActiveBaseLayoutId,
+    activeThemeName,
+    setActiveThemeName,
     handleLayoutChange,
     handleThemeChange,
     allLayouts,
