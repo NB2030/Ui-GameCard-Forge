@@ -122,7 +122,7 @@ function createMenu() {
               type: 'info',
               title: 'About',
               message: 'GameCard Forge',
-              detail: 'GameCard Forge is an application for designing UI game cards in SVG and PNG formats, allowing you to create fully customizable, high-quality cards for use in games and apps quickly and easily.\n\nVersion: 1.0.2\nDeveloped by: DevNader'
+              detail: 'GameCard Forge is an application for designing UI game cards in SVG and PNG formats, allowing you to create fully customizable, high-quality cards for use in games and apps quickly and easily.\n\nVersion: 1.0.0\nDeveloped by: DevNader'
             });
           }
         }
@@ -162,6 +162,17 @@ app.on('web-contents-created', (event, contents) => {
     }
   });
 });
+
+
+
+
+
+
+
+
+
+
+
 
 
 

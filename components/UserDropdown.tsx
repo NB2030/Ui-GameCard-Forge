@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { signOut } from '../services/auth';
+import { getCachedUserProfile } from '../services/offlineStorage';
 
 interface UserDropdownProps {
   user: any;
@@ -31,18 +32,29 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user, onOpenProfile, isDark
     }
   };
 
-  const getInitials = () => {
-    const email = user?.email || '';
-    const name = user?.user_metadata?.full_name || '';
-
-    if (name) {
-      return name.split(' ').map((n: string) => n[0]).join('').toUpperCase().substring(0, 2);
+  const getDisplayName = () => {
+    const cachedProfile = getCachedUserProfile()?.profile;
+    const fullName = cachedProfile?.full_name || user?.user_metadata?.full_name;
+    if (fullName && fullName.trim().length > 0) {
+      return fullName.trim();
     }
-    return email.substring(0, 2).toUpperCase();
+    return user?.email?.split('@')[0] || 'User';
   };
 
-  const getDisplayName = () => {
-    return user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'مستخدم';
+  const getInitials = () => {
+    const cachedProfile = getCachedUserProfile()?.profile;
+    const fullName = cachedProfile?.full_name || user?.user_metadata?.full_name || '';
+    if (fullName) {
+      return fullName
+        .split(' ')
+        .filter(Boolean)
+        .map((part: string) => part[0]?.toUpperCase() || '')
+        .join('')
+        .substring(0, 2) || fullName.substring(0, 2).toUpperCase();
+    }
+
+    const email = user?.email || '';
+    return email.substring(0, 2).toUpperCase();
   };
 
   return (
@@ -103,7 +115,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user, onOpenProfile, isDark
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              الملف الشخصي
+              Profile
             </button>
 
             <div className={`my-1 border-t ${isDark ? 'border-[#334155]' : 'border-gray-100'}`}></div>
@@ -119,7 +131,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user, onOpenProfile, isDark
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
-              تسجيل الخروج
+              Sign Out
             </button>
           </div>
         </div>

@@ -23,7 +23,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ isOpen, onClose, onSuccess,
       onSuccess();
       onClose();
     } catch (err: any) {
-      setError(err.message || 'حدث خطأ أثناء تفعيل الترخيص');
+      setError(err.message || 'An error occurred while activating the license');
     } finally {
       setLoading(false);
     }
@@ -67,12 +67,12 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ isOpen, onClose, onSuccess,
               <h2 className={`text-3xl font-bold mb-2 ${
                 isDark ? 'text-white' : 'text-gray-900'
               }`}>
-                تفعيل الترخيص
+                Activate License
               </h2>
               <p className={`text-sm ${
                 isDark ? 'text-gray-400' : 'text-gray-600'
               }`}>
-                أدخل مفتاح الترخيص الخاص بك لتفعيل البرنامج
+                Enter your license key to unlock the app
               </p>
             </div>
 
@@ -87,7 +87,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ isOpen, onClose, onSuccess,
                 <label className={`block text-sm font-medium mb-2 ${
                   isDark ? 'text-gray-300' : 'text-gray-700'
                 }`}>
-                  مفتاح الترخيص
+                  License Key
                 </label>
                 <input
                   type="text"
@@ -104,15 +104,13 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ isOpen, onClose, onSuccess,
               </div>
 
               <button
-                type="submit"
                 disabled={loading}
                 className={`w-full py-3 rounded-lg font-semibold transition-all ${
                   loading
                     ? 'bg-gray-400 cursor-not-allowed'
                     : 'bg-cyan-500 hover:bg-cyan-600 active:scale-[0.98]'
-                } text-white`}
-              >
-                {loading ? 'جاري التفعيل...' : 'تفعيل الترخيص'}
+                } text-white`}>
+                {loading ? 'Activating...' : 'Activate License'}
               </button>
             </form>
 
@@ -120,7 +118,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ isOpen, onClose, onSuccess,
               isDark ? 'bg-[#0f172a]' : 'bg-gray-50'
             }`}>
               <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                ملاحظة: يمكنك الحصول على مفتاح الترخيص من لوحة الإدارة الخاصة بك
+                Note: You can retrieve a license key from your admin dashboard
               </p>
             </div>
           </div>
