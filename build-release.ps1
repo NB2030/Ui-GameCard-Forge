@@ -1,18 +1,18 @@
 param(
-    [string]$Version = "",           # رقم إصدار محدد (اختياري)
+    [string]$Version = "",           # Specific version number (optional)
     [ValidateSet("patch", "minor", "major")]
-    [string]$IncrementType = "patch", # نوع الزيادة التلقائية
-    [switch]$SyncOnly,               # مزامنة فقط بدون بناء
-    [switch]$TestBuild,              # بناء للاختبار فقط
-    [switch]$SkipVersion,            # تخطي تحديث الإصدار
-    [switch]$Verbose                 # إظهار تفاصيل إضافية
+    [string]$IncrementType = "patch", # Auto-increment type
+    [switch]$SyncOnly,               # Sync only without build
+    [switch]$TestBuild,              # Test build only
+    [switch]$SkipVersion,            # Skip version update
+    [switch]$Verbose                 # Show additional details
 )
 
-# إعدادات الألوان والرموز
+# Console preferences
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
-# دوال مساعدة للعرض
+# Helper output functions
 function Write-StepHeader($step, $total, $title) {
     Write-Host ""
     Write-Host "⏳ Step $step/$total`: $title..." -ForegroundColor Cyan
@@ -30,7 +30,7 @@ function Write-Error($message) {
     Write-Host "   ❌ $message" -ForegroundColor Red
 }
 
-# دالة قراءة ملف JSON
+# Read JSON file helper
 function Get-JsonConfig($filePath) {
     if (Test-Path $filePath) {
         return Get-Content $filePath -Raw | ConvertFrom-Json
@@ -38,12 +38,12 @@ function Get-JsonConfig($filePath) {
     return $null
 }
 
-# دالة حفظ ملف JSON
+# Write JSON file helper
 function Set-JsonConfig($filePath, $config) {
     $config | ConvertTo-Json -Depth 10 | Set-Content $filePath -Encoding UTF8
 }
 
-# دالة زيادة رقم الإصدار
+# Version increment helper
 function Get-NextVersion($currentVersion, $incrementType) {
     $versionParts = $currentVersion.Split('.')
     $major = [int]$versionParts[0]
@@ -59,12 +59,12 @@ function Get-NextVersion($currentVersion, $incrementType) {
     return "$major.$minor.$patch"
 }
 
-# البداية
+# Entry banner
 Write-Host ""
 Write-Host "🚀 GameCard Forge Release Builder v2.0" -ForegroundColor Magenta
 Write-Host "═══════════════════════════════════════" -ForegroundColor Magenta
 
-# قراءة الإعدادات
+# Load configuration files
 $buildConfig = Get-JsonConfig "build-config.json"
 $versionInfo = Get-JsonConfig "version-info.json"
 
@@ -81,7 +81,7 @@ if (-not $versionInfo) {
 # Step 1: Environment Check
 Write-StepHeader 1 6 "Environment Check"
 
-# فحص Node.js
+# Check Node.js
 try {
     $nodeVersion = node --version
     Write-Success "Node.js $nodeVersion found"
@@ -90,7 +90,7 @@ try {
     exit 1
 }
 
-# فحص npm
+# Check npm
 try {
     $npmVersion = npm --version
     Write-Success "npm $npmVersion found"
@@ -99,7 +99,21 @@ try {
     exit 1
 }
 
-# فحص المجلد المصدر (اختياري للمشروع المحدث)
+# Install dependencies if missing
+if (-not (Test-Path "node_modules")) {
+    Write-Info "node_modules folder not found. Running npm install..."
+    try {
+        npm install | Out-Null
+        Write-Success "npm dependencies installed"
+    } catch {
+        Write-Error "npm install failed: $_"
+        exit 1
+    }
+} else {
+    Write-Info "Dependencies already installed (node_modules found)"
+}
+
+# Check source folder (optional for mirrored project)
 $sourcePath = $buildConfig.sourcePath
 if ($sourcePath -and (Test-Path $sourcePath)) {
     Write-Success "Source project found: $sourcePath"
@@ -123,7 +137,7 @@ if (-not $SkipVersion) {
     }
     
     if ($newVersion -ne $currentVersion) {
-        # تحديث version-info.json
+        # Update version-info.json
         $versionInfo.currentVersion = $newVersion
         $versionInfo.lastBuildDate = Get-Date -Format "yyyy-MM-dd"
         $versionInfo.buildNumber++
@@ -135,13 +149,13 @@ if (-not $SkipVersion) {
         Set-JsonConfig "version-info.json" $versionInfo
         Write-Success "Version updated: $newVersion"
         
-        # تحديث package.json
+        # Update package.json
         $packageJson = Get-JsonConfig "package.json"
         $packageJson.version = $newVersion
         Set-JsonConfig "package.json" $packageJson
         Write-Success "package.json updated"
         
-        # تحديث metadata.json (إضافة version إذا لم تكن موجودة)
+        # Update metadata.json (add version if missing)
         $metadataJson = Get-JsonConfig "metadata.json"
         if ($metadataJson) {
             $metadataJson | Add-Member -NotePropertyName "version" -NotePropertyValue $newVersion -Force
@@ -149,7 +163,7 @@ if (-not $SkipVersion) {
             Write-Success "metadata.json updated"
         }
         
-        # تحديث main.js About dialog
+        # Update main.js About dialog
         if (Test-Path "main.js") {
             $mainJsContent = Get-Content "main.js" -Raw
             $versionPattern = "Version: \d+\.\d+\.\d+"
@@ -168,14 +182,14 @@ if (-not $SkipVersion) {
     Write-Info "Version update skipped"
 }
 
-# Step 3: File Synchronization (اختياري للمشروع المحدث)
+# Step 3: File Synchronization (optional for mirrored project)
 Write-StepHeader 3 6 "File Synchronization"
 
 if ($sourcePath -and (Test-Path $sourcePath)) {
     $fileCount = 0
     $folderCount = 0
 
-    # نسخ الملفات المحددة
+    # Copy selected files
     foreach ($file in $buildConfig.syncSettings.filesToCopy) {
         $sourceFilePath = Join-Path $sourcePath $file
         if (Test-Path $sourceFilePath) {
@@ -185,7 +199,7 @@ if ($sourcePath -and (Test-Path $sourcePath)) {
         }
     }
 
-    # نسخ المجلدات
+    # Sync folders
     foreach ($folder in $buildConfig.syncSettings.foldersToSync) {
         $sourceFolderPath = Join-Path $sourcePath $folder
         if (Test-Path $sourceFolderPath) {
@@ -203,14 +217,14 @@ if ($sourcePath -and (Test-Path $sourcePath)) {
     Write-Info "File synchronization skipped (no source path configured)"
 }
 
-# توقف هنا إذا كان SyncOnly
+# Stop here if SyncOnly is set
 if ($SyncOnly) {
     Write-Host ""
     Write-Host "🎉 Synchronization completed!" -ForegroundColor Green
     exit 0
 }
 
-# Step 4: Web App Build  
+# Step 4: Web App Build
 Write-StepHeader 4 6 "Web App Build"
 
 $buildStart = Get-Date
@@ -263,7 +277,7 @@ if (Test-Path $outputPath) {
     }
 }
 
-# خلاصة النهائية
+# Final summary
 Write-Host ""
 Write-Host "🎉 GameCard Forge v$newVersion Build Completed Successfully!" -ForegroundColor Green
 Write-Host "═══════════════════════════════════════════════════════════" -ForegroundColor Green

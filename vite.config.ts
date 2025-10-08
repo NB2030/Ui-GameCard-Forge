@@ -19,6 +19,32 @@ export default defineConfig(({ mode }) => {
         alias: {
           '@': path.resolve(__dirname, '.'),
         }
+      },
+      build: {
+        chunkSizeWarningLimit: 1500,
+        rollupOptions: {
+          output: {
+            manualChunks(id) {
+              if (!id.includes('node_modules')) {
+                return undefined;
+              }
+
+              if (id.includes('react')) {
+                return 'react';
+              }
+
+              if (id.includes('@supabase/supabase-js')) {
+                return 'supabase';
+              }
+
+              if (id.includes('jszip')) {
+                return 'jszip';
+              }
+
+              return 'vendor';
+            }
+          }
+        }
       }
     };
 });
