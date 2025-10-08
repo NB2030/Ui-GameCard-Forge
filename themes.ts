@@ -70,6 +70,7 @@ export const layouts: Layout[] = [
           imageOffsetX: 0,
           imageOffsetY: 0,
           imageScale: 1,
+          imageRotation: 0,
         }
       },
       {
@@ -123,6 +124,7 @@ export const layouts: Layout[] = [
           imageOffsetX: 0,
           imageOffsetY: 0,
           imageScale: 1,
+          imageRotation: 0,
         }
       },
       {
@@ -176,6 +178,7 @@ export const layouts: Layout[] = [
           imageOffsetX: 0,
           imageOffsetY: 0,
           imageScale: 1,
+          imageRotation: 0,
         }
       },
       {
@@ -229,6 +232,7 @@ export const layouts: Layout[] = [
           imageOffsetX: 0,
           imageOffsetY: 0,
           imageScale: 1,
+          imageRotation: 0,
         }
       }
     ]
@@ -288,6 +292,7 @@ export const layouts: Layout[] = [
           imageOffsetX: 0,
           imageOffsetY: 0,
           imageScale: 1,
+          imageRotation: 0,
         }
       },
     ]

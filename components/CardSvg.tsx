@@ -75,6 +75,7 @@ const CardSvg: React.FC<CardSvgProps> = ({ config, customFonts }) => {
     imageOffsetX,
     imageOffsetY,
     imageScale,
+    imageRotation,
   } = config;
   
   // Calculate darker colors for hover states.
@@ -88,8 +89,8 @@ const CardSvg: React.FC<CardSvgProps> = ({ config, customFonts }) => {
   // --- Dynamic Layout Calculations ---
   const padding = 25;
 
-  // Image layout: Occupies the top 40% of the card's height.
-  const imageAreaHeight = cardHeight * 0.4;
+  // Image layout: Occupies the top 55% of the card's height for more image space.
+  const imageAreaHeight = cardHeight * 0.55;
   const imageAreaWidth = cardWidth - (padding * 2);
   const imageX = padding;
   const imageY = padding;
@@ -203,15 +204,17 @@ const CardSvg: React.FC<CardSvgProps> = ({ config, customFonts }) => {
 
       {/* Display uploaded image, clipped to the defined path */}
       {image && (
-        <image
-          href={image}
-          x={finalImageX}
-          y={finalImageY}
-          width={scaledWidth}
-          height={scaledHeight}
-          clipPath="url(#image-clip)"
-          preserveAspectRatio="xMidYMid slice"
-        />
+        <g clipPath="url(#image-clip)">
+          <image
+            href={image}
+            x={finalImageX}
+            y={finalImageY}
+            width={scaledWidth}
+            height={scaledHeight}
+            preserveAspectRatio="xMidYMid slice"
+            transform={`rotate(${imageRotation}, ${imageX + imageAreaWidth / 2}, ${imageY + imageAreaHeight / 2})`}
+          />
+        </g>
       )}
 
       {/* Title Text (using native SVG text for reliable export) */}

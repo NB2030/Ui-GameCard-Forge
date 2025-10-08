@@ -80,25 +80,50 @@ const ImageAndFontsTab: React.FC<ImageAndFontsTabProps> = ({
               </div>
             </div>
 
-            <div className="mt-4 pt-4 border-t space-y-3">
-              <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Image Position:</p>
-              <div className="grid grid-cols-2 gap-3">
-                <NumberInput
-                  id="imageOffsetX"
-                  label="Horizontal Offset (X)"
-                  value={config.imageOffsetX}
-                  onChange={onConfigChange}
-                  step={1}
-                  isDark={isDark}
-                />
-                <NumberInput
-                  id="imageOffsetY"
-                  label="Vertical Offset (Y)"
-                  value={config.imageOffsetY}
-                  onChange={onConfigChange}
-                  step={1}
-                  isDark={isDark}
-                />
+            <div className="mt-4 pt-4 border-t space-y-4">
+              <div className="space-y-3">
+                <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Image Position:</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <NumberInput
+                    id="imageOffsetX"
+                    label="Horizontal Offset (X)"
+                    value={config.imageOffsetX}
+                    onChange={onConfigChange}
+                    step={1}
+                    isDark={isDark}
+                  />
+                  <NumberInput
+                    id="imageOffsetY"
+                    label="Vertical Offset (Y)"
+                    value={config.imageOffsetY}
+                    onChange={onConfigChange}
+                    step={1}
+                    isDark={isDark}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Image Transform:</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <NumberInput
+                    id="imageScale"
+                    label="Scale (Zoom)"
+                    value={config.imageScale}
+                    onChange={onConfigChange}
+                    min={0.1}
+                    step={0.1}
+                    isDark={isDark}
+                  />
+                  <NumberInput
+                    id="imageRotation"
+                    label="Rotation (Degrees)"
+                    value={config.imageRotation}
+                    onChange={onConfigChange}
+                    step={1}
+                    isDark={isDark}
+                  />
+                </div>
               </div>
             </div>
           </div>
