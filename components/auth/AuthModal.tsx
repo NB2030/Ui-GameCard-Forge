@@ -43,14 +43,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, isDar
               <h2 className={`text-3xl font-bold mb-2 ${
                 isDark ? 'text-white' : 'text-gray-900'
               }`}>
-                {mode === 'signin' ? 'تسجيل الدخول' : 'إنشاء حساب جديد'}
+                {mode === 'signin' ? 'Sign In' : 'Create Account'}
               </h2>
               <p className={`text-sm ${
                 isDark ? 'text-gray-400' : 'text-gray-600'
               }`}>
                 {mode === 'signin'
-                  ? 'مرحباً بعودتك! سجل دخولك للمتابعة'
-                  : 'أنشئ حسابك الآن للبدء'}
+                  ? 'Welcome back! Please sign in to continue.'
+                  : 'Create your account now to get started.'}
               </p>
             </div>
 
