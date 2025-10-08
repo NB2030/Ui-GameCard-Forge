@@ -415,7 +415,7 @@ const App: React.FC = () => {
 
       <div className="flex-1 flex overflow-hidden" style={{ minHeight: 0 }}>
 
-        <div className={`w-80 flex flex-col ${
+        <div className={`w-80 flex flex-col min-h-0 ${
           isDark ? 'bg-[#1a232e] border-r border-[#2d3748]' : 'bg-[#F9FAFB] border-r border-gray-200'
         }`} style={{ fontSize: `${settings.uiFontSize}px` }}>
           <ControlPanel
@@ -451,7 +451,7 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        <div className={`w-80 flex flex-col ${
+        <div className={`w-80 flex flex-col min-h-0 ${
           isDark ? 'bg-[#1a232e] border-l border-[#2d3748]' : 'bg-[#F9FAFB] border-l border-gray-200'
         }`} style={{ fontSize: `${settings.uiFontSize}px` }}>
           <RightPanel
