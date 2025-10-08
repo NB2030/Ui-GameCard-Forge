@@ -5,6 +5,7 @@
 import React from 'react';
 import type { CardConfig, CustomFont } from '../../types';
 import FileInput from '../controls/FileInput';
+import NumberInput from '../controls/NumberInput';
 
 /**
  * @interface ImageAndFontsTabProps
@@ -19,6 +20,8 @@ interface ImageAndFontsTabProps {
   customFonts: CustomFont[];
   /** @type {(e: React.ChangeEvent<HTMLInputElement>) => void} The callback function to handle the font file upload event. */
   onFontUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  /** @type {(e: React.ChangeEvent<HTMLInputElement>) => void} The callback function to handle configuration changes. */
+  onConfigChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   /** @type {boolean} Flag indicating if the dark theme is active for UI styling. */
   isDark: boolean;
 }
@@ -33,6 +36,7 @@ const ImageAndFontsTab: React.FC<ImageAndFontsTabProps> = ({
   onImageUpload,
   customFonts,
   onFontUpload,
+  onConfigChange,
   isDark
 }) => {
   return (
@@ -66,13 +70,35 @@ const ImageAndFontsTab: React.FC<ImageAndFontsTabProps> = ({
           <div className={`${isDark ? 'bg-[#1e293b] border-[#334155]' : 'bg-white border-gray-200'} rounded-lg border p-4`}>
             <p className={`text-sm font-medium mb-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Current Image Preview:</p>
             <div className="relative">
-              <img 
-                src={config.image} 
-                alt="Uploaded card" 
+              <img
+                src={config.image}
+                alt="Uploaded card"
                 className={`rounded-lg w-full object-cover max-h-48 shadow-sm ${isDark ? 'border-[#334155]' : 'border-gray-100'}`}
               />
               <div className={`absolute top-2 right-2 text-white text-xs px-2 py-1 rounded-full ${isDark ? 'bg-green-600' : 'bg-green-500'}`}>
                 ✓ Uploaded
+              </div>
+            </div>
+
+            <div className="mt-4 pt-4 border-t space-y-3">
+              <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Image Position:</p>
+              <div className="grid grid-cols-2 gap-3">
+                <NumberInput
+                  id="imageOffsetX"
+                  label="Horizontal Offset (X)"
+                  value={config.imageOffsetX}
+                  onChange={onConfigChange}
+                  step={1}
+                  isDark={isDark}
+                />
+                <NumberInput
+                  id="imageOffsetY"
+                  label="Vertical Offset (Y)"
+                  value={config.imageOffsetY}
+                  onChange={onConfigChange}
+                  step={1}
+                  isDark={isDark}
+                />
               </div>
             </div>
           </div>

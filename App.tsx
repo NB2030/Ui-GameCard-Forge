@@ -151,6 +151,19 @@ const App: React.FC = () => {
   };
 
   /**
+   * Handles input changes for card configuration properties.
+   * @param e - The input change event.
+   */
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    const isCheckbox = type === 'checkbox' && e.target instanceof HTMLInputElement;
+    setConfig((prevConfig) => ({
+      ...prevConfig,
+      [name]: isCheckbox ? (e.target as HTMLInputElement).checked : type === 'number' ? (value === '' ? 0 : parseFloat(value)) : value,
+    }));
+  };
+
+  /**
    * Handles the custom font file upload event.
    * Reads font files, generates data URLs, and adds them to the custom fonts state.
    * @param e - The input change event.
@@ -451,6 +464,7 @@ const App: React.FC = () => {
             onImageUpload={handleImageUpload}
             customFonts={customFonts}
             onFontUpload={handleFontUpload}
+            onConfigChange={handleInputChange}
             isDark={isDark}
           />
         </div>

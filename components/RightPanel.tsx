@@ -31,6 +31,8 @@ interface RightPanelProps {
   customFonts: CustomFont[];
   /** @type {(e: React.ChangeEvent<HTMLInputElement>) => void} Callback for the custom font upload event. */
   onFontUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  /** @type {(e: React.ChangeEvent<HTMLInputElement>) => void} Callback for configuration changes. */
+  onConfigChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   /** @type {boolean} Flag indicating if the dark theme is active for UI styling. */
   isDark: boolean;
 }
@@ -50,6 +52,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
   onImageUpload,
   customFonts,
   onFontUpload,
+  onConfigChange,
   isDark
 }) => {
   const [activeTab, setActiveTab] = useState<'templates' | 'assets'>('templates');
@@ -95,6 +98,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
             onImageUpload={onImageUpload}
             customFonts={customFonts}
             onFontUpload={onFontUpload}
+            onConfigChange={onConfigChange}
             isDark={isDark}
           />
         )}
