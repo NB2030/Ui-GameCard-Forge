@@ -154,10 +154,6 @@ const CardSvgHorizontal: React.FC<CardSvgHorizontalProps> = ({ config, customFon
             </linearGradient>
           </>
         )}
-        {/* A more subtle drop shadow for the banner style */}
-        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-          <feDropShadow dx="0" dy="4" stdDeviation="8" floodColor="#000000" floodOpacity="0.08" />
-        </filter>
         {/* Clip path for the image */}
         <clipPath id="h-image-clip">
           <rect x={imageX} y={imageY} width={imageAreaSize} height={imageAreaSize} rx={innerCornerRadius} ry={innerCornerRadius} />
@@ -186,7 +182,6 @@ const CardSvgHorizontal: React.FC<CardSvgHorizontalProps> = ({ config, customFon
         rx={cardCornerRadius}
         ry={cardCornerRadius}
         fill={frameColor}
-        filter="url(#shadow)"
       />
 
       {/* Inner Content Panel */}
