@@ -34,22 +34,22 @@ const LicenseGate: React.FC<LicenseGateProps> = ({ children, isDark }) => {
 
   const checkLicense = async () => {
     setLicenseStatus(prev => ({ ...prev, loading: true }));
-    
+
     const isOnline = checkNetworkStatus();
     console.log('Network status:', isOnline);
-    
+
     try {
       if (isOnline) {
         // Try to check license online
         console.log('Checking license online...');
         try {
           const result = await checkUserLicense(user!.id);
-          
+
           if (result.isValid && result.profile) {
             // Cache the successful license check
             cacheUserProfile(result.profile.profile, result.profile.licenses, result.profile.activeLicense);
             disableOfflineMode();
-            
+
             setLicenseStatus({
               isValid: true,
               loading: false,
@@ -59,23 +59,10 @@ const LicenseGate: React.FC<LicenseGateProps> = ({ children, isDark }) => {
             });
             return;
           } else {
-            // License invalid online - check if we have valid cached data
-            if (isCachedLicenseValid()) {
-              console.log('Using cached license data (online check failed)');
-              const cachedInfo = getOfflineCacheInfo();
-              enableOfflineMode();
-              
-              setLicenseStatus({
-                isValid: true,
-                loading: false,
-                message: 'Using cached license (Online verification failed)',
-                offline: true,
-                daysRemaining: cachedInfo.daysRemaining
-              });
-              return;
-            }
-            
-            // No valid license online or cached
+            // License invalid online - DO NOT fall back to cache
+            // The connection is working, so we trust the online result
+            disableOfflineMode();
+
             setLicenseStatus({
               isValid: false,
               loading: false,
@@ -83,43 +70,67 @@ const LicenseGate: React.FC<LicenseGateProps> = ({ children, isDark }) => {
               offline: false,
               daysRemaining: 0
             });
-          }
-        } catch (onlineError) {
-          console.error('Online license check failed:', onlineError);
-          
-          // Network error - fall back to cached license
-          if (isCachedLicenseValid()) {
-            console.log('Using cached license data (network error)');
-            const cachedInfo = getOfflineCacheInfo();
-            enableOfflineMode();
-            
-            setLicenseStatus({
-              isValid: true,
-              loading: false,
-              message: 'Using cached license (Network error)',
-              offline: true,
-              daysRemaining: cachedInfo.daysRemaining
-            });
             return;
           }
-          
-          // No cached license available
-          setLicenseStatus({
-            isValid: false,
-            loading: false,
-            message: 'Cannot verify license - No internet connection and no cached license',
-            offline: true,
-            daysRemaining: 0
-          });
+        } catch (onlineError: any) {
+          console.error('Online license check failed:', onlineError);
+
+          // Check if this is a network error or a database error
+          // Network errors typically have specific error messages or codes
+          const isNetworkError =
+            !navigator.onLine ||
+            onlineError?.message?.includes('Failed to fetch') ||
+            onlineError?.message?.includes('NetworkError') ||
+            onlineError?.message?.includes('network') ||
+            onlineError?.code === 'ECONNREFUSED' ||
+            onlineError?.code === 'ETIMEDOUT';
+
+          if (isNetworkError) {
+            // True network error - fall back to cached license
+            if (isCachedLicenseValid()) {
+              console.log('Using cached license data (network error)');
+              const cachedInfo = getOfflineCacheInfo();
+              enableOfflineMode();
+
+              setLicenseStatus({
+                isValid: true,
+                loading: false,
+                message: 'Using cached license (Network error)',
+                offline: true,
+                daysRemaining: cachedInfo.daysRemaining
+              });
+              return;
+            }
+
+            // No cached license available
+            setLicenseStatus({
+              isValid: false,
+              loading: false,
+              message: 'Cannot verify license - No internet connection and no cached license',
+              offline: true,
+              daysRemaining: 0
+            });
+          } else {
+            // Not a network error - likely a database or authentication error
+            // Do not fall back to cache, show the error
+            disableOfflineMode();
+            setLicenseStatus({
+              isValid: false,
+              loading: false,
+              message: 'Error verifying license. Please check your account status.',
+              offline: false,
+              daysRemaining: 0
+            });
+          }
         }
       } else {
         // Offline mode - check cached license
         console.log('Device is offline, checking cached license...');
-        
+
         if (isCachedLicenseValid()) {
           const cachedInfo = getOfflineCacheInfo();
           enableOfflineMode();
-          
+
           setLicenseStatus({
             isValid: true,
             loading: false,
