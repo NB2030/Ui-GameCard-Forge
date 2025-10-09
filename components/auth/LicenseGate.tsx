@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AuthModal from './AuthModal';
 import LicenseModal from './LicenseModal';
 import { useAuth } from '../../hooks/useAuth';
@@ -31,6 +31,8 @@ const LicenseGate: React.FC<LicenseGateProps> = ({ children, isDark }) => {
   });
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showLicenseModal, setShowLicenseModal] = useState(false);
+  const lastCheckedUserId = useRef<string | null>(null);
+  const hasCheckedLicense = useRef(false);
 
   const checkLicense = async () => {
     setLicenseStatus(prev => ({ ...prev, loading: true }));
@@ -161,10 +163,22 @@ const LicenseGate: React.FC<LicenseGateProps> = ({ children, isDark }) => {
   };
 
   useEffect(() => {
-    if (!authLoading && user) {
-      checkLicense();
-    } else if (!authLoading && !user) {
-        setLicenseStatus({ isValid: false, loading: false, message: '', offline: false, daysRemaining: 0 });
+    if (authLoading) {
+      return;
+    }
+
+    if (user) {
+      // Only check license if user changed or this is the first check
+      if (lastCheckedUserId.current !== user.id || !hasCheckedLicense.current) {
+        lastCheckedUserId.current = user.id;
+        hasCheckedLicense.current = true;
+        checkLicense();
+      }
+    } else {
+      // User logged out
+      lastCheckedUserId.current = null;
+      hasCheckedLicense.current = false;
+      setLicenseStatus({ isValid: false, loading: false, message: '', offline: false, daysRemaining: 0 });
     }
   }, [authLoading, user]);
 
