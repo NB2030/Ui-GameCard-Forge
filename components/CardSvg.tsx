@@ -154,10 +154,6 @@ const CardSvg: React.FC<CardSvgProps> = ({ config, customFonts }) => {
             </linearGradient>
           </>
         )}
-        {/* Filter for the card's drop shadow */}
-        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#000000" floodOpacity="0.15" />
-        </filter>
         {/* Clip path to round the corners of the uploaded image */}
         <clipPath id="image-clip">
           <rect x={padding} y={padding} width={imageAreaWidth} height={imageAreaHeight} rx={innerCornerRadius} ry={innerCornerRadius} />
@@ -186,7 +182,6 @@ const CardSvg: React.FC<CardSvgProps> = ({ config, customFonts }) => {
         rx={cardCornerRadius}
         ry={cardCornerRadius}
         fill={frameColor}
-        filter="url(#shadow)"
       />
 
       {/* Inner Colored Panel - The main content area with its own border */}
