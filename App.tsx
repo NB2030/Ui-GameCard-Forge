@@ -426,7 +426,7 @@ const App: React.FC = () => {
         >
           <div
             ref={svgContainerRef}
-            className="max-w-full max-h-full shadow-2xl rounded-lg overflow-hidden"
+            className="max-w-full max-h-full overflow-hidden"
             style={{
               aspectRatio: `${config.cardWidth} / ${config.cardHeight}`,
               width: 'min(100%, 500px)',
