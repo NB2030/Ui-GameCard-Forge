@@ -448,6 +448,7 @@ const App: React.FC = () => {
             onLayoutChange={handleLayoutChange}
             onThemeChange={handleThemeChange}
             config={config}
+            setConfig={(updates) => setConfig(prev => ({ ...prev, ...updates }))}
             onImageUpload={handleImageUpload}
             customFonts={customFonts}
             onFontUpload={handleFontUpload}

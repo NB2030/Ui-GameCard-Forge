@@ -25,6 +25,8 @@ interface RightPanelProps {
   onThemeChange: (themeName: string) => void;
   /** @type {CardConfig} The current card configuration object. */
   config: CardConfig;
+  /** @type {(updates: Partial<CardConfig>) => void} Callback to update the configuration. */
+  setConfig: (updates: Partial<CardConfig>) => void;
   /** @type {(e: React.ChangeEvent<HTMLInputElement>) => void} Callback for the main card image upload event. */
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   /** @type {CustomFont[]} An array of custom fonts uploaded by the user. */
@@ -47,6 +49,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
   onLayoutChange,
   onThemeChange,
   config,
+  setConfig,
   onImageUpload,
   customFonts,
   onFontUpload,
@@ -92,6 +95,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
         {activeTab === 'assets' && (
           <ImageAndFontsTab
             config={config}
+            setConfig={setConfig}
             onImageUpload={onImageUpload}
             customFonts={customFonts}
             onFontUpload={onFontUpload}

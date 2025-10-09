@@ -75,6 +75,7 @@ const CardSvgHorizontal: React.FC<CardSvgHorizontalProps> = ({ config, customFon
     imageOffsetX,
     imageOffsetY,
     imageScale,
+    imageRotation,
   } = config;
   
   // Calculate darker colors for hover states.
@@ -203,15 +204,17 @@ const CardSvgHorizontal: React.FC<CardSvgHorizontalProps> = ({ config, customFon
 
       {/* Display uploaded image or a placeholder if no image is present */}
       {image ? (
-        <image
-          href={image}
-          x={finalImageX}
-          y={finalImageY}
-          width={scaledSize}
-          height={scaledSize}
-          clipPath="url(#h-image-clip)"
-          preserveAspectRatio="xMidYMid slice"
-        />
+        <g clipPath="url(#h-image-clip)">
+          <image
+            href={image}
+            x={finalImageX}
+            y={finalImageY}
+            width={scaledSize}
+            height={scaledSize}
+            transform={`rotate(${imageRotation || 0} ${imageX + imageAreaSize / 2} ${imageY + imageAreaSize / 2})`}
+            preserveAspectRatio="xMidYMid slice"
+          />
+        </g>
       ) : (
          <rect
           x={imageX}

@@ -35,10 +35,10 @@ export function getErrorMessage(error: any): string {
 
 export function logError(context: string, error: any): void {
   console.error(`[${context}]`, {
-    message: error?.message,
-    code: error?.code,
-    isNetworkError: isNetworkError(error),
-    timestamp: new Date().toISOString(),
+    رسالة: error?.message,
+    كود: error?.code,
+    خطأ_شبكة: isNetworkError(error),
+    وقت: new Date().toISOString(),
   });
 }
 
@@ -60,7 +60,7 @@ export async function retryWithExponentialBackoff<T>(
       }
 
       const delay = baseDelay * Math.pow(2, attempt);
-      console.log(`Retry attempt ${attempt + 1}/${maxRetries} after ${delay}ms`);
+      console.log(`محاولة ${attempt + 1}/${maxRetries} بعد ${delay}ms`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }

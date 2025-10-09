@@ -106,6 +106,8 @@ export interface CardConfig {
   imageOffsetY: number;
   /** Scale factor (zoom) for the uploaded image. */
   imageScale: number;
+  /** Rotation angle for the uploaded image in degrees. */
+  imageRotation: number;
 }
 
 /**
