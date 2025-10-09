@@ -404,7 +404,7 @@ const App: React.FC = () => {
 
         <div className={`w-80 flex flex-col ${
           isDark ? 'bg-[#1a232e] border-r border-[#2d3748]' : 'bg-[#F9FAFB] border-r border-gray-200'
-        }`} style={{ fontSize: `${settings.uiFontSize}px` }}>
+        }`}>
           <ControlPanel
             config={config}
             setConfig={setConfig}
@@ -440,7 +440,7 @@ const App: React.FC = () => {
 
         <div className={`w-80 flex flex-col ${
           isDark ? 'bg-[#1a232e] border-l border-[#2d3748]' : 'bg-[#F9FAFB] border-l border-gray-200'
-        }`} style={{ fontSize: `${settings.uiFontSize}px` }}>
+        }`}>
           <RightPanel
             layouts={allLayouts}
             activeLayoutId={activeLayoutId}

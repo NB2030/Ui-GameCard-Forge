@@ -89,30 +89,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           <div>
-            <label htmlFor="ui-font-size" className={`block text-sm font-medium mb-2 ${
-              isDark ? 'text-cyan-400' : 'text-gray-700'
-            }`}>
-              UI Font Size: {settings.uiFontSize}px
-            </label>
-            <input
-              id="ui-font-size"
-              type="range"
-              min="12"
-              max="20"
-              step="1"
-              value={settings.uiFontSize}
-              onChange={(e) => onSettingsChange({ uiFontSize: parseInt(e.target.value) })}
-              className="w-full h-2 appearance-none"
-            />
-            <div className={`flex justify-between text-xs mt-1 ${
-              isDark ? 'text-gray-400' : 'text-gray-500'
-            }`}>
-              <span>12px</span>
-              <span>20px</span>
-            </div>
-          </div>
-
-          <div>
             <label htmlFor="canvas-bg" className={`block text-sm font-medium mb-2 ${
               isDark ? 'text-cyan-400' : 'text-gray-700'
             }`}>
@@ -137,30 +113,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 }`}
                 placeholder="#f3f4f6"
               />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="ui-scale" className={`block text-sm font-medium mb-2 ${
-              isDark ? 'text-cyan-400' : 'text-gray-700'
-            }`}>
-              UI Scale: {Math.round(settings.uiScale * 100)}%
-            </label>
-            <input
-              id="ui-scale"
-              type="range"
-              min="0.8"
-              max="1.2"
-              step="0.05"
-              value={settings.uiScale}
-              onChange={(e) => onSettingsChange({ uiScale: parseFloat(e.target.value) })}
-              className="w-full h-2 appearance-none"
-            />
-            <div className={`flex justify-between text-xs mt-1 ${
-              isDark ? 'text-gray-400' : 'text-gray-500'
-            }`}>
-              <span>80%</span>
-              <span>120%</span>
             </div>
           </div>
         </div>

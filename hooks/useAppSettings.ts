@@ -7,12 +7,8 @@ import { useState, useEffect } from 'react';
 export interface AppSettings {
   /** @type {'light' | 'dark'} The current UI theme. */
   theme: 'light' | 'dark';
-  /** @type {number} The base font size for the application's user interface, in pixels. */
-  uiFontSize: number;
   /** @type {string} The background color of the main canvas area where the card is displayed. */
   canvasBackgroundColor: string;
-  /** @type {number} The scaling factor for the entire UI, allowing users to zoom in or out. */
-  uiScale: number;
 }
 
 /**
@@ -21,9 +17,7 @@ export interface AppSettings {
  */
 const DEFAULT_SETTINGS: AppSettings = {
   theme: 'light',
-  uiFontSize: 14,
-  canvasBackgroundColor: '#f3f4f6',
-  uiScale: 1.0
+  canvasBackgroundColor: '#f3f4f6'
 };
 
 /**

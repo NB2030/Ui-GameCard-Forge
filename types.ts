@@ -160,10 +160,6 @@ export interface CustomFont {
 export interface AppSettings {
   /** The theme mode of the application ('light' or 'dark'). */
   theme: 'light' | 'dark';
-  /** The font size for the UI in pixels. */
-  uiFontSize: number;
   /** The background color of the canvas/preview area. */
   canvasBackgroundColor: string;
-  /** The scale factor for the UI (zoom level). */
-  uiScale: number;
 }
