@@ -3,44 +3,21 @@
  * Handles caching user data, license information, and app state for offline usage
  */
 
-interface CachedUserData {
-  id: string;
-  email: string;
-  full_name: string;
-  created_at: string;
-}
-
-interface CachedLicenseData {
-  user_id: string;
-  license_key: string;
-  activated_at: string;
-  expires_at: string;
-  is_active: boolean;
-  duration_days: number;
-}
-
-interface OfflineCache {
-  user: CachedUserData | null;
-  license: CachedLicenseData | null;
-  lastSync: string;
-  isOfflineMode: boolean;
-  authToken: string | null;
-}
-
-const CACHE_KEY = 'gamecard-forge-offline-cache';
-const MAX_OFFLINE_DAYS = 30; // Maximum days to work offline
+import { CACHE_KEYS, TIME_CONSTANTS, ERROR_MESSAGES } from '../utils/constants';
+import { logError } from '../utils/errorHandling';
+import type { OfflineCache, CachedLicenseData, UserProfile } from '../types/auth';
 
 /**
  * Gets cached data from localStorage
  */
 export const getOfflineCache = (): OfflineCache | null => {
   try {
-    const cached = localStorage.getItem(CACHE_KEY);
+    const cached = localStorage.getItem(CACHE_KEYS.OFFLINE_CACHE);
     if (cached) {
       return JSON.parse(cached);
     }
   } catch (error) {
-    console.error('Failed to load offline cache:', error);
+    logError('getOfflineCache', error);
   }
   return null;
 };
@@ -57,47 +34,52 @@ export const saveOfflineCache = (data: Partial<OfflineCache>): void => {
       isOfflineMode: false,
       authToken: null
     };
-    
+
     const updated = {
       ...existing,
       ...data,
       lastSync: new Date().toISOString()
     };
-    
-    localStorage.setItem(CACHE_KEY, JSON.stringify(updated));
+
+    localStorage.setItem(CACHE_KEYS.OFFLINE_CACHE, JSON.stringify(updated));
   } catch (error) {
-    console.error('Failed to save offline cache:', error);
+    logError('saveOfflineCache', error);
   }
 };
 
 /**
  * Caches user profile data
  */
-export const cacheUserProfile = (user: any, licenses: any[], activeLicense: any): void => {
-  const userData: CachedUserData = {
-    id: user.id,
-    email: user.email,
-    full_name: user.full_name,
-    created_at: user.created_at
-  };
-
-  let licenseData: CachedLicenseData | null = null;
-  if (activeLicense) {
-    licenseData = {
-      user_id: activeLicense.user_id,
-      license_key: activeLicense.licenses?.license_key || 'CACHED_LICENSE',
-      activated_at: activeLicense.activated_at,
-      expires_at: activeLicense.expires_at,
-      is_active: activeLicense.is_active,
-      duration_days: activeLicense.licenses?.duration_days || 30
+export const cacheUserProfile = (user: UserProfile, licenses: any[], activeLicense: any): void => {
+  try {
+    const userData: UserProfile = {
+      id: user.id,
+      email: user.email,
+      full_name: user.full_name,
+      created_at: user.created_at,
+      updated_at: user.updated_at
     };
-  }
 
-  saveOfflineCache({
-    user: userData,
-    license: licenseData,
-    isOfflineMode: false
-  });
+    let licenseData: CachedLicenseData | null = null;
+    if (activeLicense) {
+      licenseData = {
+        user_id: activeLicense.user_id,
+        license_key: activeLicense.licenses?.license_key || 'CACHED_LICENSE',
+        activated_at: activeLicense.activated_at,
+        expires_at: activeLicense.expires_at,
+        is_active: activeLicense.is_active,
+        duration_days: activeLicense.licenses?.duration_days || 30
+      };
+    }
+
+    saveOfflineCache({
+      user: userData,
+      license: licenseData,
+      isOfflineMode: false
+    });
+  } catch (error) {
+    logError('cacheUserProfile', error);
+  }
 };
 
 /**
@@ -131,8 +113,8 @@ export const isCachedLicenseValid = (): boolean => {
   // Check if we haven't been offline too long
   const lastSync = new Date(cache.lastSync);
   const daysSinceSync = Math.floor((now.getTime() - lastSync.getTime()) / (1000 * 60 * 60 * 24));
-  
-  if (daysSinceSync > MAX_OFFLINE_DAYS) {
+
+  if (daysSinceSync > TIME_CONSTANTS.MAX_OFFLINE_DAYS) {
     return false;
   }
 
@@ -201,9 +183,9 @@ export const isOfflineMode = (): boolean => {
  */
 export const clearOfflineCache = (): void => {
   try {
-    localStorage.removeItem(CACHE_KEY);
+    localStorage.removeItem(CACHE_KEYS.OFFLINE_CACHE);
   } catch (error) {
-    console.error('Failed to clear offline cache:', error);
+    logError('clearOfflineCache', error);
   }
 };
 

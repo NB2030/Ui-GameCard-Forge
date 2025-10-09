@@ -4,16 +4,17 @@ import LicenseModal from './LicenseModal';
 import { useAuth } from '../../hooks/useAuth';
 import { checkUserLicense } from '../../services/license';
 import { signOut as authSignOut } from '../../services/auth';
-import { 
-  isCachedLicenseValid, 
-  getCachedUserProfile, 
-  enableOfflineMode, 
+import {
+  isCachedLicenseValid,
+  getCachedUserProfile,
+  enableOfflineMode,
   disableOfflineMode,
   checkNetworkStatus,
   getOfflineCacheInfo,
   clearOfflineCache,
   cacheUserProfile
 } from '../../services/offlineStorage';
+import { isNetworkError, getErrorMessage } from '../../utils/errorHandling';
 
 interface LicenseGateProps {
   children: React.ReactNode;
@@ -77,17 +78,7 @@ const LicenseGate: React.FC<LicenseGateProps> = ({ children, isDark }) => {
         } catch (onlineError: any) {
           console.error('Online license check failed:', onlineError);
 
-          // Check if this is a network error or a database error
-          // Network errors typically have specific error messages or codes
-          const isNetworkError =
-            !navigator.onLine ||
-            onlineError?.message?.includes('Failed to fetch') ||
-            onlineError?.message?.includes('NetworkError') ||
-            onlineError?.message?.includes('network') ||
-            onlineError?.code === 'ECONNREFUSED' ||
-            onlineError?.code === 'ETIMEDOUT';
-
-          if (isNetworkError) {
+          if (isNetworkError(onlineError)) {
             // True network error - fall back to cached license
             if (isCachedLicenseValid()) {
               console.log('Using cached license data (network error)');
@@ -119,7 +110,7 @@ const LicenseGate: React.FC<LicenseGateProps> = ({ children, isDark }) => {
             setLicenseStatus({
               isValid: false,
               loading: false,
-              message: 'Error verifying license. Please check your account status.',
+              message: getErrorMessage(onlineError),
               offline: false,
               daysRemaining: 0
             });
