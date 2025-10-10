@@ -13,24 +13,24 @@ export const TIME_CONSTANTS = {
 } as const;
 
 export const ERROR_MESSAGES = {
-  NETWORK_ERROR: 'فشل الاتصال بالخادم. يرجى التحقق من اتصالك بالإنترنت.',
-  NO_USER: 'يجب تسجيل الدخول أولاً',
-  NO_LICENSE: 'لا يوجد ترخيص نشط',
-  LICENSE_EXPIRED: 'انتهت صلاحية الترخيص',
-  LICENSE_INVALID: 'الترخيص غير صالح',
-  AUTH_FAILED: 'فشلت عملية المصادقة',
-  PROFILE_FETCH_ERROR: 'فشل تحميل بيانات الملف الشخصي',
-  LICENSE_FETCH_ERROR: 'فشل تحميل بيانات الترخيص',
-  OFFLINE_NO_CACHE: 'لا يوجد اتصال بالإنترنت ولا توجد بيانات محفوظة',
-  CACHE_EXPIRED: 'انتهت صلاحية البيانات المحفوظة',
+  NETWORK_ERROR: 'Failed to connect to server. Please check your internet connection.',
+  NO_USER: 'You must log in first',
+  NO_LICENSE: 'No active license',
+  LICENSE_EXPIRED: 'License has expired',
+  LICENSE_INVALID: 'Invalid license',
+  AUTH_FAILED: 'Authentication failed',
+  PROFILE_FETCH_ERROR: 'Failed to load profile data',
+  LICENSE_FETCH_ERROR: 'Failed to load license data',
+  OFFLINE_NO_CACHE: 'No internet connection and no cached data',
+  CACHE_EXPIRED: 'Cached data has expired',
 } as const;
 
 export const SUCCESS_MESSAGES = {
-  LICENSE_ACTIVATED: 'تم تفعيل الترخيص بنجاح',
-  LOGIN_SUCCESS: 'تم تسجيل الدخول بنجاح',
-  SIGNUP_SUCCESS: 'تم إنشاء الحساب بنجاح',
-  LOGOUT_SUCCESS: 'تم تسجيل الخروج بنجاح',
-  PROFILE_UPDATED: 'تم تحديث الملف الشخصي بنجاح',
+  LICENSE_ACTIVATED: 'License activated successfully',
+  LOGIN_SUCCESS: 'Logged in successfully',
+  SIGNUP_SUCCESS: 'Account created successfully',
+  LOGOUT_SUCCESS: 'Logged out successfully',
+  PROFILE_UPDATED: 'Profile updated successfully',
 } as const;
 
 export const NETWORK_ERROR_INDICATORS = [

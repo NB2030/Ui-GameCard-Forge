@@ -44,15 +44,15 @@ const ImageAndFontsTab: React.FC<ImageAndFontsTabProps> = ({
     <div className="p-6 space-y-6">
 
       {/* Image Upload Section */}
-      <Section title="صورة البطاقة" isDark={isDark}>
+      <Section title="Card Image" isDark={isDark}>
         <div className="space-y-4">
           <FileInput
             id="image-upload"
-            label="رفع الصورة"
+            label="Upload Image"
             accept="image/png, image/jpeg, image/webp"
             onChange={onImageUpload}
-            buttonText="اختر الصورة"
-            placeholderText="لم يتم اختيار صورة"
+            buttonText="Choose Image"
+            placeholderText="No image selected"
             isDark={isDark}
           />
 
@@ -71,53 +71,49 @@ const ImageAndFontsTab: React.FC<ImageAndFontsTabProps> = ({
                   </div>
                 </div>
                 <div className="flex-1">
-                  <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>تم رفع الصورة</p>
-                  <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>يمكنك التحكم بموضع وحجم الصورة</p>
+                  <p className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Image Uploaded</p>
+                  <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Control position and size</p>
                 </div>
               </div>
 
               {/* Image Controls */}
               <div className="space-y-3 pt-2">
                 <NumberInput
-                  id="image-offset-x"
-                  label="الإزاحة الأفقية (X)"
+                  id="imageOffsetX"
+                  label="Horizontal Offset (X)"
                   value={config.imageOffsetX}
-                  onChange={(value) => setConfig({ imageOffsetX: value })}
+                  onChange={(e) => setConfig({ imageOffsetX: parseFloat(e.target.value) || 0 })}
                   min={-200}
-                  max={200}
                   step={1}
                   isDark={isDark}
                 />
 
                 <NumberInput
-                  id="image-offset-y"
-                  label="الإزاحة العمودية (Y)"
+                  id="imageOffsetY"
+                  label="Vertical Offset (Y)"
                   value={config.imageOffsetY}
-                  onChange={(value) => setConfig({ imageOffsetY: value })}
+                  onChange={(e) => setConfig({ imageOffsetY: parseFloat(e.target.value) || 0 })}
                   min={-200}
-                  max={200}
                   step={1}
                   isDark={isDark}
                 />
 
                 <NumberInput
-                  id="image-scale"
-                  label="حجم الصورة"
+                  id="imageScale"
+                  label="Image Scale"
                   value={config.imageScale}
-                  onChange={(value) => setConfig({ imageScale: value })}
+                  onChange={(e) => setConfig({ imageScale: parseFloat(e.target.value) || 1 })}
                   min={0.1}
-                  max={3}
                   step={0.1}
                   isDark={isDark}
                 />
 
                 <NumberInput
-                  id="image-rotation"
-                  label="التدوير (درجة)"
+                  id="imageRotation"
+                  label="Rotation (degrees)"
                   value={config.imageRotation}
-                  onChange={(value) => setConfig({ imageRotation: value })}
+                  onChange={(e) => setConfig({ imageRotation: parseFloat(e.target.value) || 0 })}
                   min={-180}
-                  max={180}
                   step={1}
                   isDark={isDark}
                 />
@@ -132,37 +128,37 @@ const ImageAndFontsTab: React.FC<ImageAndFontsTabProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h4 className={`text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>لا توجد صورة</h4>
+              <h4 className={`text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>No Image</h4>
               <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
-                قم برفع صورة لإضافتها إلى البطاقة
+                Upload an image to add it to the card
               </p>
             </div>
           )}
 
           <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-            الصيغ المدعومة: PNG, JPEG, WebP
+            Supported formats: PNG, JPEG, WebP
           </p>
         </div>
       </Section>
 
       {/* Font Management Section */}
-      <Section title="الخطوط المخصصة" isDark={isDark}>
+      <Section title="Custom Fonts" isDark={isDark}>
         <div className="space-y-4">
           <FileInput
             id="font-upload"
-            label="رفع ملفات الخطوط"
+            label="Upload Font Files"
             multiple
-            buttonText="اختر الخطوط"
+            buttonText="Choose Fonts"
             accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2,application/font-woff,application/font-woff2,application/x-font-ttf,application/x-font-opentype"
             onChange={onFontUpload}
-            placeholderText="لم يتم اختيار خطوط"
+            placeholderText="No fonts selected"
             isDark={isDark}
           />
 
           {customFonts.length > 0 && (
             <div className="space-y-2 pt-2">
               <p className={`text-xs font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                الخطوط المرفوعة ({customFonts.length}):
+                Uploaded Fonts ({customFonts.length}):
               </p>
               <div className="space-y-2">
                 {customFonts.map(font => (
@@ -179,7 +175,7 @@ const ImageAndFontsTab: React.FC<ImageAndFontsTabProps> = ({
                       </div>
                     </div>
                     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${isDark ? 'bg-green-500/20 text-green-300' : 'bg-green-100 text-green-700'}`}>
-                      جاهز
+                      Ready
                     </span>
                   </div>
                 ))}
@@ -194,15 +190,15 @@ const ImageAndFontsTab: React.FC<ImageAndFontsTabProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
               </div>
-              <h4 className={`text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>لا توجد خطوط مخصصة</h4>
+              <h4 className={`text-sm font-medium mb-1 ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>No Custom Fonts</h4>
               <p className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
-                قم برفع خطوط لاستخدامها في تصميم البطاقات
+                Upload fonts to use in your card designs
               </p>
             </div>
           )}
 
           <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-            الصيغ المدعومة: TTF, OTF, WOFF, WOFF2
+            Supported formats: TTF, OTF, WOFF, WOFF2
           </p>
         </div>
       </Section>
